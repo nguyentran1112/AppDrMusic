@@ -5,5 +5,7 @@ export default {
     Neural60: '#6A6A8B',
     textColor: '#F5F5FA',
     Primary: '#4838D1',
-    accentColor: '#F77A55'
+    accentColor: '#F77A55',
+    error: '#ff3333',
+    disabled: '#2b237d'
 }

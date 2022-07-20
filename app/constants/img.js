@@ -10,4 +10,5 @@ export default {
   carousel3: require('../assets/Carousel3.png'),
   logoGoogle: require('../assets/logoGoogle.png'),
   logoFacebook: require('../assets/logoFacebook.png'),
+  fingerprint: require('../assets/fingerprint.png'),
 };

@@ -1,28 +1,59 @@
 //import liraries
 import React, {Component, useState} from 'react';
-import {View, Text, StyleSheet, Image, TextInput} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TextInput,
+  StatusBar,
+} from 'react-native';
 import {colors, img} from '../constants/index';
 import CheckBox from 'react-native-check-box';
 import {ButtonLg, ButtonSm} from '../components';
+import {isValidEmail, isValidPassword} from '../utilities';
 
 // create a component
 const Login = () => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
-  console.log(toggleCheckBox);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [borderColorInPutPW, setBorderColorInPutPW] = useState(colors.Neural90);
+  const [borderColorInPutEmail, setBorderColorInPutEmail] = useState(
+    colors.Neural90,
+  );
+  //check Validation
+  const Validation = () => {
+    return isValidEmail(email) && isValidPassword(password);
+  };
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor={colors.Neural100} barStyle="light-content" />
+
       <Image style={styles.imgIcon} source={img.logoDark} />
       <View style={styles.formControl}>
         <Text style={styles.title}>Login to Your Account</Text>
         <TextInput
-          style={styles.textInput}
+          onBlur={() => setBorderColorInPutEmail(colors.Neural100)}
+          onFocus={() => setBorderColorInPutEmail(colors.Primary)}
+          value={email}
+          onChangeText={text => {
+            setEmail(text);
+          }}
+          style={[styles.textInput, {borderColor: borderColorInPutEmail}]}
           placeholderTextColor={colors.Neural60}
           placeholderStyle={styles.placeholderStyle}
           placeholder="Email"
         />
         <TextInput
+          onBlur={() => setBorderColorInPutPW(colors.Neural100)}
+          onFocus={() => setBorderColorInPutPW(colors.Primary)}
+          value={password}
           secureTextEntry={true}
-          style={styles.textInput}
+          onChangeText={text => {
+            setPassword(text);
+          }}
+          style={[styles.textInput, {borderColor: borderColorInPutPW}]}
           placeholderTextColor={colors.Neural60}
           placeholderStyle={styles.placeholderStyle}
           placeholder="Password"
@@ -39,7 +70,13 @@ const Login = () => {
           />
         </View>
         <View style={{marginVertical: 8}}>
-          <ButtonLg title={'Login'} color={colors.Primary} borderWidth={'0'} />
+          <ButtonLg
+            disabled={!Validation()}
+            opacity={!Validation() ? 0.5 : 1}
+            title={'Login'}
+            color={colors.Primary}
+            borderWidth={'0'}
+          />
         </View>
         <View style={styles.footerForm}>
           <Text style={styles.footerContent}>Forget Password ?</Text>
@@ -65,7 +102,7 @@ const Login = () => {
           <ButtonSm
             haveIcon={true}
             color={colors.Neural100}
-            img={img.logoGoogle}
+            img={img.fingerprint}
             borderColor={'white'}
             borderWidth={'1'}
           />
@@ -124,6 +161,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '400',
     lineHeight: 21,
+    borderWidth: 1,
   },
   placeholderStyle: {
     fontSize: 14,

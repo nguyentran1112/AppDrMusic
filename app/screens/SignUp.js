@@ -1,32 +1,72 @@
 //import liraries
 import React, {Component, useState} from 'react';
-import {View, Text, StyleSheet, Image, TextInput} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TextInput,
+  StatusBar,
+} from 'react-native';
 import {colors, img} from '../constants/index';
-import CheckBox from 'react-native-check-box';
-import {ButtonLg, ButtonSm} from '../components';
-
+import {ButtonLg} from '../components';
+import {isValidEmail, isValidPassword} from '../utilities';
 // create a component
 const SignUp = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [borderColorInPutName, setBorderColorInPutName] = useState(
+    colors.Neural90,
+  );
+  const [borderColorInPutPW, setBorderColorInPutPW] = useState(colors.Neural90);
+  const [borderColorInPutEmail, setBorderColorInPutEmail] = useState(
+    colors.Neural90,
+  );
+
+  //check Validation
+  const Validation = () => {
+    return isValidEmail(email) && isValidPassword(password) && name.length > 0;
+  };
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor={colors.Neural100} barStyle="light-content" />
       <Image style={styles.imgIcon} source={img.logoDark} />
       <View style={styles.formControl}>
         <Text style={styles.title}>Register</Text>
         <TextInput
-          style={styles.textInput}
+          onBlur={() => setBorderColorInPutName(colors.Neural100)}
+          onFocus={() => setBorderColorInPutName(colors.Primary)}
+          value={name}
+          onChangeText={text => {
+            setName(text);
+          }}
+          style={[styles.textInput, {borderColor: borderColorInPutName}]}
           placeholderTextColor={colors.Neural60}
           placeholderStyle={styles.placeholderStyle}
           placeholder="Name"
         />
         <TextInput
-          style={styles.textInput}
+          onBlur={() => setBorderColorInPutEmail(colors.Neural100)}
+          onFocus={() => setBorderColorInPutEmail(colors.Primary)}
+          value={email}
+          onChangeText={text => {
+            setEmail(text);
+          }}
+          style={[styles.textInput, {borderColor: borderColorInPutEmail}]}
           placeholderTextColor={colors.Neural60}
           placeholderStyle={styles.placeholderStyle}
           placeholder="Email"
         />
         <TextInput
+          onBlur={() => setBorderColorInPutPW(colors.Neural100)}
+          onFocus={() => setBorderColorInPutPW(colors.Primary)}
+          value={password}
           secureTextEntry={true}
-          style={styles.textInput}
+          onChangeText={text => {
+            setPassword(text);
+          }}
+          style={[styles.textInput, {borderColor: borderColorInPutPW}]}
           placeholderTextColor={colors.Neural60}
           placeholderStyle={styles.placeholderStyle}
           placeholder="Password"
@@ -52,15 +92,16 @@ const SignUp = () => {
         <View>
           <View style={{marginVertical: 8}}>
             <ButtonLg
+              disabled={!Validation()}
               title={'Register'}
               color={colors.Primary}
+              opacity={!Validation() ? 0.5 : 1}
               borderWidth={'0'}
             />
           </View>
           <View style={{marginVertical: 8}}>
             <ButtonLg
               title={'Cancel'}
-              color={colors.Neural100}
               borderWidth={'1'}
               borderColor={'white'}
             />
@@ -110,6 +151,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '400',
     lineHeight: 21,
+    borderWidth: 1,
+    borderColor: colors.Neural90,
   },
   placeholderStyle: {
     fontSize: 14,

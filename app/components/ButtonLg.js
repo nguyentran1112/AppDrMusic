@@ -10,11 +10,13 @@ const ButtonLg = props => {
       style={[
         styles.container,
         {
+          opacity: props.opacity,
           backgroundColor: props.color,
           borderColor: props.borderColor,
           borderWidth: Number(props.borderWidth),
         },
       ]}
+      disabled={props.disabled}
       onPress={props.onPress}>
       <Text style={styles.title}>{props.title}</Text>
     </TouchableOpacity>

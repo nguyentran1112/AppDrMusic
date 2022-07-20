@@ -6,6 +6,7 @@ import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 const ButtonSm = props => {
   return (
     <TouchableOpacity
+      onPress={props.onPress}
       style={[
         styles.container,
         {
@@ -14,8 +15,10 @@ const ButtonSm = props => {
           borderWidth: Number(props.borderWidth),
         },
       ]}>
-      {props.haveTitle?(<Text style={styles.title}>{props.title}</Text>):null}
-      {props.haveIcon?(<Image style={{height: 24, width: 24}} source={props.img}></Image>):null}
+      {props.haveTitle ? <Text style={styles.title}>{props.title}</Text> : null}
+      {props.haveIcon ? (
+        <Image style={{height: 24, width: 24}} source={props.img}></Image>
+      ) : null}
     </TouchableOpacity>
   );
 };

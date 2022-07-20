@@ -8,7 +8,7 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="SignUp">
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
          options={{headerTitle: 'Test', headerShown: false}}
          name={'SplashScreen'}
