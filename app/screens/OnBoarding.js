@@ -95,15 +95,13 @@ const OnBoarding = ({navigation}) => {
               <ButtonLg
                 title={'Bắt đầu thôi nào'}
                 onPress={() => navigation.replace('SplashScreen')}
+                color={colors.Primary}
+                borderWidth={'0'}
               />
             </View>
           ) : (
             <View style={{flexDirection: 'row'}}>
-              <Button
-                color={colors.Neural100}
-                title={'Skip'}
-                onPress={skip}
-              />
+              <Button color={colors.Neural100} title={'Skip'} onPress={skip} />
               <View style={{width: 15}} />
               <Button
                 color={colors.Primary}

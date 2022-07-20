@@ -1,17 +1,9 @@
 //import liraries
 import React, {Component, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TextInput,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, StyleSheet, Image, TextInput} from 'react-native';
 import {colors, img} from '../constants/index';
 import CheckBox from 'react-native-check-box';
 import {ButtonLg, ButtonSm} from '../components';
-import {color} from 'react-native-reanimated';
 
 // create a component
 const Login = () => {
@@ -47,46 +39,46 @@ const Login = () => {
           />
         </View>
         <View style={{marginVertical: 8}}>
-          <ButtonLg title={'Login'} />
+          <ButtonLg title={'Login'} color={colors.Primary} borderWidth={'0'} />
         </View>
         <View style={styles.footerForm}>
           <Text style={styles.footerContent}>Forget Password ?</Text>
         </View>
-        <View style={styles.footer}>
-          <Text style={styles.whiteTextStyle}>Or login with</Text>
-          <View style={styles.socmedLogin}>
-            <ButtonSm
-              haveIcon={true}
-              color={colors.Neural100}
-              img={img.logoGoogle}
-              borderColor={'white'}
-              borderWidth={'1'}
-            />
-            <ButtonSm
-              haveIcon={true}
-              color={colors.Neural100}
-              img={img.logoFacebook}
-              borderColor={'white'}
-              borderWidth={'1'}
-            />
-            <ButtonSm
-              haveIcon={true}
-              color={colors.Neural100}
-              img={img.logoGoogle}
-              borderColor={'white'}
-              borderWidth={'1'}
-            />
-          </View>
-          <View style={styles.register}>
-            <Text style={styles.whiteTextStyle}>Don't have an accoun't ?</Text>
-            <Text
-              style={[
-                styles.whiteTextStyle,
-                {color: colors.accentColor, marginLeft: 6},
-              ]}>
-              Register
-            </Text>
-          </View>
+      </View>
+      <View style={styles.footer}>
+        <Text style={styles.whiteTextStyle}>Or login with</Text>
+        <View style={styles.socmedLogin}>
+          <ButtonSm
+            haveIcon={true}
+            color={colors.Neural100}
+            img={img.logoGoogle}
+            borderColor={'white'}
+            borderWidth={'1'}
+          />
+          <ButtonSm
+            haveIcon={true}
+            color={colors.Neural100}
+            img={img.logoFacebook}
+            borderColor={'white'}
+            borderWidth={'1'}
+          />
+          <ButtonSm
+            haveIcon={true}
+            color={colors.Neural100}
+            img={img.logoGoogle}
+            borderColor={'white'}
+            borderWidth={'1'}
+          />
+        </View>
+        <View style={styles.register}>
+          <Text style={styles.whiteTextStyle}>Don't have an accoun't ?</Text>
+          <Text
+            style={[
+              styles.whiteTextStyle,
+              {color: colors.accentColor, marginLeft: 6},
+            ]}>
+            Register
+          </Text>
         </View>
       </View>
     </View>

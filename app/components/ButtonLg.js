@@ -6,7 +6,16 @@ import {colors} from '../constants/index';
 // create a component
 const ButtonLg = props => {
   return (
-    <TouchableOpacity style={styles.container} onPress={props.onPress}>
+    <TouchableOpacity
+      style={[
+        styles.container,
+        {
+          backgroundColor: props.color,
+          borderColor: props.borderColor,
+          borderWidth: Number(props.borderWidth),
+        },
+      ]}
+      onPress={props.onPress}>
       <Text style={styles.title}>{props.title}</Text>
     </TouchableOpacity>
   );
@@ -15,7 +24,6 @@ const ButtonLg = props => {
 // define your styles
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.Primary,
     justifyContent: 'center',
     alignItems: 'center',
     width: 295,
@@ -23,13 +31,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 16,
     paddingHorizontal: 32,
-   
   },
   title: {
     color: 'white',
     fontSize: 16,
     lineHeight: 24,
-    fontWeight: '500'
+    fontWeight: '500',
   },
 });
 
