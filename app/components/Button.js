@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
 // create a component
-const ButtonSmall = props => {
+const Button = props => {
   return (
     <TouchableOpacity
       onPress={props.onPress}
@@ -32,4 +32,4 @@ const styles = StyleSheet.create({
 });
 
 //make this component available to the app
-export default ButtonSmall;
+export default Button;

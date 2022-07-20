@@ -11,8 +11,7 @@ import {
   FlatList,
 } from 'react-native';
 import {colors, img} from '../constants/index';
-import {ButtonText, ButtonSmall} from '../components/index';
-import AppIntroSlider from 'react-native-app-intro-slider';
+import {ButtonLg, Button} from '../components/index';
 import {color} from 'react-native-reanimated';
 
 // create a component
@@ -22,21 +21,23 @@ const OnBoarding = ({navigation}) => {
     {
       id: '1',
       title: 'Học tập',
-      content: 'Bạn có thể tập trung học tập với những bài hát cùng DrMusic',
+      content: 'Bạn có thể tập trung học tập với những bài hát cùng DrMusic.',
       img: img.peopleDark,
       carousel: img.carousel1,
     },
     {
       id: '2',
       title: 'Thư giãn',
-      content: 'Thư giãn cùng với những bài hát của DrMusic',
+      content:
+        'Thư giãn cùng với những bài hát của DrMusic sau những ngày làm việc và học tập.',
       img: img.knowledgeDark,
       carousel: img.carousel2,
     },
     {
       id: '3',
       title: 'Hòa nhập',
-      content: 'DrMusic cùng những bài hát sẽ giúp các bạn gần nhau hơn',
+      content:
+        'DrMusic cùng những bài hát sẽ giúp các bạn kết thân và gần nhau hơn.',
       img: img.comunityDark,
       carousel: img.carousel3,
     },
@@ -66,12 +67,7 @@ const OnBoarding = ({navigation}) => {
   };
   const Footer = () => {
     return (
-      <View
-        style={{
-          height: height * 0.25,
-          justifyContent: 'space-around',
-          paddingHorizontal: 20,
-        }}>
+      <View style={styles.styleFooter}>
         {/* Indicator container */}
         <View
           style={{
@@ -93,23 +89,23 @@ const OnBoarding = ({navigation}) => {
         </View>
 
         {/* Render buttons */}
-        <View style={{marginBottom: 40, alignItems: 'center'}}>
+        <View style={styles.btns}>
           {currentSlideIndex == slides.length - 1 ? (
             <View style={{height: 50}}>
-              <ButtonText
+              <ButtonLg
                 title={'Bắt đầu thôi nào'}
                 onPress={() => navigation.replace('SplashScreen')}
               />
             </View>
           ) : (
             <View style={{flexDirection: 'row'}}>
-              <ButtonSmall
+              <Button
                 color={colors.Neural100}
                 title={'Skip'}
                 onPress={skip}
               />
               <View style={{width: 15}} />
-              <ButtonSmall
+              <Button
                 color={colors.Primary}
                 title={'Next'}
                 onPress={goToNextSlide}
@@ -188,13 +184,21 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     fontWeight: '400',
   },
-
   indicator: {
     height: 12,
     width: 12,
     backgroundColor: colors.Neural80,
     marginHorizontal: 12,
     borderRadius: 6,
+  },
+  styleFooter: {
+    height: height * 0.25,
+    justifyContent: 'space-around',
+    paddingHorizontal: 20,
+  },
+  btns: {
+    marginBottom: 40,
+    alignItems: 'center',
   },
 });
 

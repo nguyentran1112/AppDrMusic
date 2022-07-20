@@ -8,4 +8,6 @@ export default {
   carousel1: require('../assets/Carousel1.png'),
   carousel2: require('../assets/Carousel2.png'),
   carousel3: require('../assets/Carousel3.png'),
+  logoGoogle: require('../assets/logoGoogle.png'),
+  logoFacebook: require('../assets/logoFacebook.png'),
 };

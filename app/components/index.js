@@ -1,4 +1,5 @@
-import ButtonText from "./ButtonText";
-import ButtonSmall from "./ButtonSmall";
+import ButtonLg from "./ButtonLg";
+import Button from "./Button";
+import ButtonSm from "./ButtonSm";
 
-export {ButtonText, ButtonSmall} 
+export {ButtonLg, Button, ButtonSm} 

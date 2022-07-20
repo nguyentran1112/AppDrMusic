@@ -4,7 +4,7 @@ import {Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {colors} from '../constants/index';
 
 // create a component
-const ButtonText = props => {
+const ButtonLg = props => {
   return (
     <TouchableOpacity style={styles.container} onPress={props.onPress}>
       <Text style={styles.title}>{props.title}</Text>
@@ -34,4 +34,4 @@ const styles = StyleSheet.create({
 });
 
 //make this component available to the app
-export default ButtonText;
+export default ButtonLg;
