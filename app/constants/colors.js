@@ -7,5 +7,6 @@ export default {
     Primary: '#4838D1',
     accentColor: '#F77A55',
     error: '#ff3333',
-    disabled: '#2b237d'
+    disabled: '#2b237d',
+    alertDark: '#121212'
 }

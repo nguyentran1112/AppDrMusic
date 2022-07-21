@@ -1,5 +1,6 @@
-import ButtonLg from "./ButtonLg";
-import Button from "./Button";
-import ButtonSm from "./ButtonSm";
+import ButtonLg from './ButtonLg';
+import Button from './Button';
+import ButtonSm from './ButtonSm';
+import AlertView from './AlertView';
 
-export {ButtonLg, Button, ButtonSm} 
+export {AlertView, ButtonLg, Button, ButtonSm};

@@ -11,4 +11,6 @@ export default {
   logoGoogle: require('../assets/logoGoogle.png'),
   logoFacebook: require('../assets/logoFacebook.png'),
   fingerprint: require('../assets/fingerprint.png'),
+  error: require('../assets/orangeAlert.json'),
+  success: require('../assets/greenAlert.json'),
 };

@@ -10,8 +10,9 @@ import {
 } from 'react-native';
 import {colors, img} from '../constants/index';
 import CheckBox from 'react-native-check-box';
-import {ButtonLg, ButtonSm} from '../components';
+import {ButtonLg, ButtonSm, AlertView} from '../components';
 import {isValidEmail, isValidPassword} from '../utilities';
+import auth from '@react-native-firebase/auth';
 
 // create a component
 const Login = () => {
@@ -25,6 +26,33 @@ const Login = () => {
   //check Validation
   const Validation = () => {
     return isValidEmail(email) && isValidPassword(password);
+  };
+  const [error, setError] = useState('');
+  const [alertVisible, setAlertVisible] = useState(false);
+  const changeAlert = bool => {
+    setAlertVisible(bool);
+  };
+  const handleLogin = (email, password) => {
+    auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        console.log('User account signed in!');
+      })
+      .catch(error => {
+        if (error.code === 'auth/wrong-password') {
+          setError('Wrong password!');
+          setAlertVisible(true);
+          console.log('Wrong password!');
+        }
+
+        if (error.code === 'auth/user-not-found') {
+          setError('User not found!');
+          setAlertVisible(true);
+          console.log('User not found!');
+        }
+
+        console.error(error);
+      });
   };
   return (
     <View style={styles.container}>
@@ -71,6 +99,9 @@ const Login = () => {
         </View>
         <View style={{marginVertical: 8}}>
           <ButtonLg
+            onPress={() => {
+              handleLogin(email, password);
+            }}
             disabled={!Validation()}
             opacity={!Validation() ? 0.5 : 1}
             title={'Login'}
@@ -82,6 +113,7 @@ const Login = () => {
           <Text style={styles.footerContent}>Forget Password ?</Text>
         </View>
       </View>
+     
       <View style={styles.footer}>
         <Text style={styles.whiteTextStyle}>Or login with</Text>
         <View style={styles.socmedLogin}>
@@ -117,6 +149,16 @@ const Login = () => {
             Register
           </Text>
         </View>
+        {alertVisible ? (
+        <AlertView
+          changeAlert={changeAlert}
+          title={'Error'}
+          messenge={error}
+          alertVisible={alertVisible}
+          icon={img.error}
+          color={'orange'}
+        />
+      ) : null}
       </View>
     </View>
   );

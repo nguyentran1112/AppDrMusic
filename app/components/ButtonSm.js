@@ -15,7 +15,7 @@ const ButtonSm = props => {
           borderWidth: Number(props.borderWidth),
         },
       ]}>
-      {props.haveTitle ? <Text style={styles.title}>{props.title}</Text> : null}
+      {props.haveTitle ? <Text style={[styles.title, {color: props.textColor}]}>{props.title}</Text> : null}
       {props.haveIcon ? (
         <Image style={{height: 24, width: 24}} source={props.img}></Image>
       ) : null}
@@ -40,6 +40,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     fontWeight: '500',
+    width: 24,
+    height: 24
   },
 });
 

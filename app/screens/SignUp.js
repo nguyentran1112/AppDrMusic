@@ -9,106 +9,153 @@ import {
   StatusBar,
 } from 'react-native';
 import {colors, img} from '../constants/index';
-import {ButtonLg} from '../components';
+import {ButtonLg, AlertView} from '../components';
 import {isValidEmail, isValidPassword} from '../utilities';
+import auth from '@react-native-firebase/auth';
+
 // create a component
-const SignUp = () => {
+const SignUp = (props) => {
+  //Navigation
+  const {navigation, routes} = props;
+  const {navigate, goBack} = navigation;
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [borderColorInPutName, setBorderColorInPutName] = useState(
     colors.Neural90,
   );
+  const [error, setError] = useState('');
+  const [alertVisible, setAlertVisible] = useState(false);
+  const changeAlert = bool => {
+    setAlertVisible(bool);
+  };
   const [borderColorInPutPW, setBorderColorInPutPW] = useState(colors.Neural90);
   const [borderColorInPutEmail, setBorderColorInPutEmail] = useState(
     colors.Neural90,
   );
-
+  console.log(error);
+  const createUser = (email, password) => {
+    auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        console.log('User account created & signed in!');
+      })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          setError('That email address is already in use!');
+          setAlertVisible(true);
+          console.log('That email address is already in use!');
+        }
+        if (error.code === 'auth/invalid-email') {
+          setError('That email address is invalid!');
+          setAlertVisible(true);
+          console.log('That email address is invalid!');
+        }
+        console.error(error);
+      });
+  };
   //check Validation
   const Validation = () => {
     return isValidEmail(email) && isValidPassword(password) && name.length > 0;
   };
+
   return (
-    <View style={styles.container}>
-      <StatusBar backgroundColor={colors.Neural100} barStyle="light-content" />
-      <Image style={styles.imgIcon} source={img.logoDark} />
-      <View style={styles.formControl}>
-        <Text style={styles.title}>Register</Text>
-        <TextInput
-          onBlur={() => setBorderColorInPutName(colors.Neural100)}
-          onFocus={() => setBorderColorInPutName(colors.Primary)}
-          value={name}
-          onChangeText={text => {
-            setName(text);
-          }}
-          style={[styles.textInput, {borderColor: borderColorInPutName}]}
-          placeholderTextColor={colors.Neural60}
-          placeholderStyle={styles.placeholderStyle}
-          placeholder="Name"
+    <>
+      <View style={styles.container}>
+        <StatusBar
+          backgroundColor={colors.Neural100}
+          barStyle="light-content"
         />
-        <TextInput
-          onBlur={() => setBorderColorInPutEmail(colors.Neural100)}
-          onFocus={() => setBorderColorInPutEmail(colors.Primary)}
-          value={email}
-          onChangeText={text => {
-            setEmail(text);
-          }}
-          style={[styles.textInput, {borderColor: borderColorInPutEmail}]}
-          placeholderTextColor={colors.Neural60}
-          placeholderStyle={styles.placeholderStyle}
-          placeholder="Email"
-        />
-        <TextInput
-          onBlur={() => setBorderColorInPutPW(colors.Neural100)}
-          onFocus={() => setBorderColorInPutPW(colors.Primary)}
-          value={password}
-          secureTextEntry={true}
-          onChangeText={text => {
-            setPassword(text);
-          }}
-          style={[styles.textInput, {borderColor: borderColorInPutPW}]}
-          placeholderTextColor={colors.Neural60}
-          placeholderStyle={styles.placeholderStyle}
-          placeholder="Password"
-        />
-        <View style={styles.policy}>
-          <Text style={styles.whiteTextStyle}>
-            By signing up, you agree to our
-          </Text>
-          <Text style={[styles.whiteTextStyle, {color: colors.accentColor}]}>
-            {' '}
-            Terms
-          </Text>
-          <Text style={styles.whiteTextStyle}>,</Text>
-          <Text style={[styles.whiteTextStyle, {color: colors.accentColor}]}>
-            Data Policy
-          </Text>
-          <Text style={styles.whiteTextStyle}> and</Text>
-          <Text style={[styles.whiteTextStyle, {color: colors.accentColor}]}>
-            {' '}
-            Cookie Policy
-          </Text>
-        </View>
-        <View>
-          <View style={{marginVertical: 8}}>
-            <ButtonLg
-              disabled={!Validation()}
-              title={'Register'}
-              color={colors.Primary}
-              opacity={!Validation() ? 0.5 : 1}
-              borderWidth={'0'}
-            />
+        <Image style={styles.imgIcon} source={img.logoDark} />
+        <View style={styles.formControl}>
+          <Text style={styles.title}>Register</Text>
+          <TextInput
+            onBlur={() => setBorderColorInPutName(colors.Neural100)}
+            onFocus={() => setBorderColorInPutName(colors.Primary)}
+            value={name}
+            onChangeText={text => {
+              setName(text);
+            }}
+            style={[styles.textInput, {borderColor: borderColorInPutName}]}
+            placeholderTextColor={colors.Neural60}
+            placeholderStyle={styles.placeholderStyle}
+            placeholder="Name"
+          />
+          <TextInput
+            onBlur={() => setBorderColorInPutEmail(colors.Neural100)}
+            onFocus={() => setBorderColorInPutEmail(colors.Primary)}
+            value={email}
+            onChangeText={text => {
+              setEmail(text);
+            }}
+            style={[styles.textInput, {borderColor: borderColorInPutEmail}]}
+            placeholderTextColor={colors.Neural60}
+            placeholderStyle={styles.placeholderStyle}
+            placeholder="Email"
+          />
+          <TextInput
+            onBlur={() => setBorderColorInPutPW(colors.Neural100)}
+            onFocus={() => setBorderColorInPutPW(colors.Primary)}
+            value={password}
+            secureTextEntry={true}
+            onChangeText={text => {
+              setPassword(text);
+            }}
+            style={[styles.textInput, {borderColor: borderColorInPutPW}]}
+            placeholderTextColor={colors.Neural60}
+            placeholderStyle={styles.placeholderStyle}
+            placeholder="Password"
+          />
+          <View style={styles.policy}>
+            <Text style={styles.whiteTextStyle}>
+              By signing up, you agree to our
+            </Text>
+            <Text style={[styles.whiteTextStyle, {color: colors.accentColor}]}>
+              {' '}
+              Terms
+            </Text>
+            <Text style={styles.whiteTextStyle}>,</Text>
+            <Text style={[styles.whiteTextStyle, {color: colors.accentColor}]}>
+              Data Policy
+            </Text>
+            <Text style={styles.whiteTextStyle}> and</Text>
+            <Text style={[styles.whiteTextStyle, {color: colors.accentColor}]}>
+              {' '}
+              Cookie Policy
+            </Text>
           </View>
-          <View style={{marginVertical: 8}}>
-            <ButtonLg
-              title={'Cancel'}
-              borderWidth={'1'}
-              borderColor={'white'}
-            />
+          <View>
+            <View style={{marginVertical: 8}}>
+              <ButtonLg
+                onPress={() => createUser(email, password)}
+                disabled={!Validation()}
+                title={'Register'}
+                color={colors.Primary}
+                opacity={!Validation() ? 0.5 : 1}
+                borderWidth={'0'}
+              />
+            </View>
+            <View style={{marginVertical: 8}}>
+              <ButtonLg
+                title={'Cancel'}
+                borderWidth={'1'}
+                borderColor={'white'}
+              />
+            </View>
           </View>
         </View>
+        {alertVisible ? (
+          <AlertView
+            changeAlert={changeAlert}
+            title={'Error'}
+            messenge={error}
+            alertVisible={alertVisible}
+            icon={img.error}
+            color={'orange'}
+          />
+        ) : null}
       </View>
-    </View>
+    </>
   );
 };
 
