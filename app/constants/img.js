@@ -13,4 +13,6 @@ export default {
   fingerprint: require('../assets/fingerprint.png'),
   error: require('../assets/orangeAlert.json'),
   success: require('../assets/greenAlert.json'),
+  iconSetting: require('../assets/Setting.png'),
+  logoSmall: require('../assets/logoSmall.png')
 };

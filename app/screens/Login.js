@@ -50,7 +50,6 @@ const Login = () => {
     // Sign-in the user with the credential
     await auth().signInWithCredential(googleCredential)
       .then((res) => {
-        setUserInfo(res);
         Alert.alert('UserData', JSON.stringify(res))
       }).catch((e) => {
         Alert.alert(e.message)

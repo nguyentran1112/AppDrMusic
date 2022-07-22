@@ -8,5 +8,6 @@ export default {
     accentColor: '#F77A55',
     error: '#ff3333',
     disabled: '#2b237d',
-    alertDark: '#121212'
+    alertDark: '#121212',
+    Primary20: '#BBB1FA'
 }
