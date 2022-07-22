@@ -1,6 +1,7 @@
 //import liraries
-import React, {Component, useState} from 'react';
+import React, {Component, useState, useEffect} from 'react';
 import {
+  Alert,
   View,
   Text,
   StyleSheet,
@@ -13,7 +14,12 @@ import CheckBox from 'react-native-check-box';
 import {ButtonLg, ButtonSm, AlertView} from '../components';
 import {isValidEmail, isValidPassword} from '../utilities';
 import auth from '@react-native-firebase/auth';
-
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+GoogleSignin.configure({
+  webClientId:
+    '326759469684-logvka8j9itr0vptnk1cvadl6tsu92lr.apps.googleusercontent.com',
+  scopes: [],
+});
 // create a component
 const Login = () => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
@@ -32,6 +38,30 @@ const Login = () => {
   const changeAlert = bool => {
     setAlertVisible(bool);
   };
+
+  const googleLogin = async () => {
+    // Get the users ID token
+    const { idToken } = await GoogleSignin.signIn().catch((e) => {
+      Alert.alert(e.message)
+      
+    });
+    // Create a Google credential with the token
+    const googleCredential = await auth.GoogleAuthProvider.credential(idToken);
+    // Sign-in the user with the credential
+    await auth().signInWithCredential(googleCredential)
+      .then((res) => {
+        setUserInfo(res);
+        Alert.alert('UserData', JSON.stringify(res))
+      }).catch((e) => {
+        Alert.alert(e.message)
+      });
+    const accessToken = await (await GoogleSignin.getTokens()).accessToken;
+    // console.log(res);
+    console.log(accessToken);
+    
+  };
+
+  //Handle Login with email and password
   const handleLogin = (email, password) => {
     auth()
       .signInWithEmailAndPassword(email, password)
@@ -113,11 +143,12 @@ const Login = () => {
           <Text style={styles.footerContent}>Forget Password ?</Text>
         </View>
       </View>
-     
+
       <View style={styles.footer}>
         <Text style={styles.whiteTextStyle}>Or login with</Text>
         <View style={styles.socmedLogin}>
           <ButtonSm
+            onPress={() => googleLogin()}
             haveIcon={true}
             color={colors.Neural100}
             img={img.logoGoogle}
@@ -150,15 +181,15 @@ const Login = () => {
           </Text>
         </View>
         {alertVisible ? (
-        <AlertView
-          changeAlert={changeAlert}
-          title={'Error'}
-          messenge={error}
-          alertVisible={alertVisible}
-          icon={img.error}
-          color={'orange'}
-        />
-      ) : null}
+          <AlertView
+            changeAlert={changeAlert}
+            title={'Error'}
+            messenge={error}
+            alertVisible={alertVisible}
+            icon={img.error}
+            color={'orange'}
+          />
+        ) : null}
       </View>
     </View>
   );

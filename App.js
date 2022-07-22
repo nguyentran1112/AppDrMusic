@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {SplashScreen, OnBoarding, Login, SignUp} from './app/screens/index';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
