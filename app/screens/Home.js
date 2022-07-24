@@ -22,8 +22,36 @@ const Home = () => {
           <Text style={styles.textCategory}>Categories</Text>
           <Text style={styles.textSeeMore}>See more</Text>
         </View>
-        <View >
-          <TouchableOpacity style={styles.itemCategory}></TouchableOpacity>
+        <View style={styles.Category}>
+          <TouchableOpacity style={styles.itemCategory}>
+            <Text style={styles.titleItemCategory}>Art</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.itemCategory}>
+            <Text style={styles.titleItemCategory}>Art</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.itemCategory}>
+            <Text style={styles.titleItemCategory}>Music</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.playListContainer}>
+        <View style={styles.playListHeader}>
+          <Text style={styles.textCategory}>Recommended for you</Text>
+          <Text style={styles.textRecommended}>See more</Text>
+        </View>
+        <View style={styles.playLists}>
+          <Image style={styles.imgPlayList} source={img.imgPlayList} />
+          <Image style={styles.imgPlayList} source={img.imgPlayList} />
+        </View>
+      </View>
+      <View style={styles.playListContainer}>
+        <View style={styles.playListHeader}>
+          <Text style={styles.textCategory}>Best seller</Text>
+          <Text style={styles.textRecommended}>See more</Text>
+        </View>
+        <View style={styles.playLists}>
+          <Image style={styles.imgPlayList} source={img.imgPlayList} />
+          <Image style={styles.imgPlayList} source={img.imgPlayList} />
         </View>
       </View>
     </View>
@@ -54,6 +82,13 @@ const styles = StyleSheet.create({
     width: 117,
     alignItems: 'center',
   },
+  playListContainer: {
+    width: 416,
+    height: 340,
+    marginTop: 32,
+    paddingLeft: 28,
+  },
+
   logoSmall: {
     width: 40,
     height: 40,
@@ -64,11 +99,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 28,
+    width: 375,
+    height: 88,
   },
   logoSetting: {
     width: 24,
     height: 24,
     marginBottom: 10,
+    marginTop: 28,
   },
   CategoryHeader: {
     display: 'flex',
@@ -76,6 +114,11 @@ const styles = StyleSheet.create({
     paddingLeft: 28,
     paddingRight: 20,
     //justifyContent: 'space-between',
+  },
+  playListHeader: {
+    display: 'flex',
+    flexDirection: 'row',
+    paddingRight: 20,
   },
   textCategory: {
     fontSize: 16,
@@ -90,21 +133,43 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: colors.Primary20,
   },
+  textRecommended: {
+    fontSize: 14,
+    lineHeight: 21,
+    fontWeight: '500',
+    color: colors.Primary20,
+    marginRight: 32,
+  },
+
   CategoryContainer: {
     width: 382,
     height: 80,
-    marginTop: 40,
+    marginTop: 18,
   },
   itemCategory: {
     backgroundColor: colors.Neural80,
     paddingHorizontal: 16,
-    paddingVertical: 8
+    paddingVertical: 8,
+    borderRadius: 12,
+    marginRight: 12,
   },
   titleItemCategory: {
     fontSize: 16,
     lineHeight: 21,
-    color: 'white'
-  }
+    color: 'white',
+  },
+  Category: {
+    display: 'flex',
+    flexDirection: 'row',
+    paddingLeft: 28,
+    marginTop: 16,
+  },
+  imgPlayList: {
+    width: 200,
+    height: 300,
+    marginRight: 16,
+  },
+  playLists: {display: 'flex', flexDirection: 'row', marginTop: 12},
 });
 
 //make this component available to the app

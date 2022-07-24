@@ -8,6 +8,7 @@ import {
   Image,
   TextInput,
   StatusBar,
+  TouchableOpacity,
 } from 'react-native';
 import {colors, img} from '../constants/index';
 import CheckBox from 'react-native-check-box';
@@ -21,7 +22,10 @@ GoogleSignin.configure({
   scopes: [],
 });
 // create a component
-const Login = () => {
+const Login = props => {
+  //Navigation
+  const {navigation, routes} = props;
+  const {navigate, goBack} = navigation;
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -38,26 +42,26 @@ const Login = () => {
   const changeAlert = bool => {
     setAlertVisible(bool);
   };
-
   const googleLogin = async () => {
     // Get the users ID token
-    const { idToken } = await GoogleSignin.signIn().catch((e) => {
-      Alert.alert(e.message)
-      
+    const {idToken} = await GoogleSignin.signIn().catch(e => {
+      Alert.alert(e.message);
     });
     // Create a Google credential with the token
     const googleCredential = await auth.GoogleAuthProvider.credential(idToken);
     // Sign-in the user with the credential
-    await auth().signInWithCredential(googleCredential)
-      .then((res) => {
-        Alert.alert('UserData', JSON.stringify(res))
-      }).catch((e) => {
-        Alert.alert(e.message)
+    await auth()
+      .signInWithCredential(googleCredential)
+      .then(res => {
+        Alert.alert('UserData', JSON.stringify(res));
+        console.log(res);
+      })
+      .catch(e => {
+        Alert.alert(e.message);
       });
     const accessToken = await (await GoogleSignin.getTokens()).accessToken;
-    // console.log(res);
-    console.log(accessToken);
-    
+
+    //console.log(accessToken);
   };
 
   //Handle Login with email and password
@@ -73,13 +77,11 @@ const Login = () => {
           setAlertVisible(true);
           console.log('Wrong password!');
         }
-
         if (error.code === 'auth/user-not-found') {
           setError('User not found!');
           setAlertVisible(true);
           console.log('User not found!');
         }
-
         console.error(error);
       });
   };
@@ -171,13 +173,15 @@ const Login = () => {
         </View>
         <View style={styles.register}>
           <Text style={styles.whiteTextStyle}>Don't have an accoun't ?</Text>
-          <Text
-            style={[
-              styles.whiteTextStyle,
-              {color: colors.accentColor, marginLeft: 6},
-            ]}>
-            Register
-          </Text>
+          <TouchableOpacity onPress={() => navigate('SignUp')}>
+            <Text
+              style={[
+                styles.whiteTextStyle,
+                {color: colors.accentColor, marginLeft: 6},
+              ]}>
+              Register
+            </Text>
+          </TouchableOpacity>
         </View>
         {alertVisible ? (
           <AlertView

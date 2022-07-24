@@ -14,5 +14,12 @@ export default {
   error: require('../assets/orangeAlert.json'),
   success: require('../assets/greenAlert.json'),
   iconSetting: require('../assets/Setting.png'),
-  logoSmall: require('../assets/logoSmall.png')
+  logoSmall: require('../assets/logoSmall.png'),
+  imgPlayList: require('../assets/ImagePlaceholder.png'),
+  iconHome: require('../assets/Home.png'),
+  iconHomeBold: require('../assets/HomeBold.png'),
+  iconSearched: require('../assets/Search.png'),
+  iconSearchedBold: require('../assets/SearchBold.png'),
+  iconDocument: require('../assets/Document.png'),
+  iconDocumentBold: require('../assets/DocumentBold.png'),
 };

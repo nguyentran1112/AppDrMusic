@@ -1,7 +1,6 @@
 //import liraries
 import React, {Component, useState, useRef} from 'react';
 import {
-  TouchableOpacity,
   Dimensions,
   View,
   Text,
@@ -12,7 +11,6 @@ import {
 } from 'react-native';
 import {colors, img} from '../constants/index';
 import {ButtonLg, Button} from '../components/index';
-import {color} from 'react-native-reanimated';
 
 // create a component
 const {width, height} = Dimensions.get('window');
