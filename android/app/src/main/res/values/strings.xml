@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AppDrMusic</string>
+    <string name="facebook_app_id">424448979740010</string>
+    <string name="facebook_client_token">867ec3d8531931eae3a402c84ccd4209</string>
 </resources>

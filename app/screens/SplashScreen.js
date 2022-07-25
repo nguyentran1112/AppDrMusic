@@ -4,10 +4,7 @@ import {View, Text, StyleSheet, Image, StatusBar} from 'react-native';
 import {colors, img} from '../constants/index';
 
 // create a component
-const SplashScreen = props => {
-  //Navigation
-  const {navigation, routes} = props;
-  //Functions of navigate to / back
+const SplashScreen = ({navigation}) => {
   const [timePassed, setTimePassed] = useState(false);
   useEffect(() => {
     setTimeout(() => {

@@ -1,5 +1,5 @@
 //import liraries
-import React, {Component, useState, useEffect} from 'react';
+import React, {useContext, Component, useState, useEffect} from 'react';
 import {
   Alert,
   View,
@@ -14,13 +14,8 @@ import {colors, img} from '../constants/index';
 import CheckBox from 'react-native-check-box';
 import {ButtonLg, ButtonSm, AlertView} from '../components';
 import {isValidEmail, isValidPassword} from '../utilities';
-import auth from '@react-native-firebase/auth';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
-GoogleSignin.configure({
-  webClientId:
-    '326759469684-logvka8j9itr0vptnk1cvadl6tsu92lr.apps.googleusercontent.com',
-  scopes: [],
-});
+import {AppContext} from '../contexts/AppContext';
+
 // create a component
 const Login = props => {
   //Navigation
@@ -37,54 +32,22 @@ const Login = props => {
   const Validation = () => {
     return isValidEmail(email) && isValidPassword(password);
   };
-  const [error, setError] = useState('');
-  const [alertVisible, setAlertVisible] = useState(false);
+
+  const {
+    signInWithEmail,
+    signInWithGoogle,
+    error,
+    setError,
+    setAlertVisible,
+    alertVisible,
+    signInWithFB,
+  } = useContext(AppContext);
   const changeAlert = bool => {
     setAlertVisible(bool);
   };
-  const googleLogin = async () => {
-    // Get the users ID token
-    const {idToken} = await GoogleSignin.signIn().catch(e => {
-      Alert.alert(e.message);
-    });
-    // Create a Google credential with the token
-    const googleCredential = await auth.GoogleAuthProvider.credential(idToken);
-    // Sign-in the user with the credential
-    await auth()
-      .signInWithCredential(googleCredential)
-      .then(res => {
-        Alert.alert('UserData', JSON.stringify(res));
-        console.log(res);
-      })
-      .catch(e => {
-        Alert.alert(e.message);
-      });
-    const accessToken = await (await GoogleSignin.getTokens()).accessToken;
-
-    //console.log(accessToken);
-  };
 
   //Handle Login with email and password
-  const handleLogin = (email, password) => {
-    auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(() => {
-        console.log('User account signed in!');
-      })
-      .catch(error => {
-        if (error.code === 'auth/wrong-password') {
-          setError('Wrong password!');
-          setAlertVisible(true);
-          console.log('Wrong password!');
-        }
-        if (error.code === 'auth/user-not-found') {
-          setError('User not found!');
-          setAlertVisible(true);
-          console.log('User not found!');
-        }
-        console.error(error);
-      });
-  };
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={colors.Neural100} barStyle="light-content" />
@@ -131,7 +94,7 @@ const Login = props => {
         <View style={{marginVertical: 8}}>
           <ButtonLg
             onPress={() => {
-              handleLogin(email, password);
+              signInWithEmail(email, password);
             }}
             disabled={!Validation()}
             opacity={!Validation() ? 0.5 : 1}
@@ -149,7 +112,7 @@ const Login = props => {
         <Text style={styles.whiteTextStyle}>Or login with</Text>
         <View style={styles.socmedLogin}>
           <ButtonSm
-            onPress={() => googleLogin()}
+            onPress={() => signInWithGoogle()}
             haveIcon={true}
             color={colors.Neural100}
             img={img.logoGoogle}
@@ -157,6 +120,7 @@ const Login = props => {
             borderWidth={'1'}
           />
           <ButtonSm
+            onPress={() => signInWithFB()}
             haveIcon={true}
             color={colors.Neural100}
             img={img.logoFacebook}

@@ -1,5 +1,5 @@
 //import liraries
-import React, {Component, useState} from 'react';
+import React, {Component, useState, useContext} from 'react';
 import {
   View,
   Text,
@@ -11,10 +11,13 @@ import {
 import {colors, img} from '../constants/index';
 import {ButtonLg, AlertView} from '../components';
 import {isValidEmail, isValidPassword} from '../utilities';
-import auth from '@react-native-firebase/auth';
+import {AppContext} from '../contexts/AppContext';
 
 // create a component
-const SignUp = (props) => {
+const SignUp = props => {
+  const {error, setAlertVisible, alertVisible, createUserWithEmail} =
+    useContext(AppContext);
+
   //Navigation
   const {navigation, routes} = props;
   const {navigate, goBack} = navigation;
@@ -24,8 +27,6 @@ const SignUp = (props) => {
   const [borderColorInPutName, setBorderColorInPutName] = useState(
     colors.Neural90,
   );
-  const [error, setError] = useState('');
-  const [alertVisible, setAlertVisible] = useState(false);
   const changeAlert = bool => {
     setAlertVisible(bool);
   };
@@ -33,27 +34,7 @@ const SignUp = (props) => {
   const [borderColorInPutEmail, setBorderColorInPutEmail] = useState(
     colors.Neural90,
   );
-  console.log(error);
-  const createUser = (email, password) => {
-    auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(() => {
-        console.log('User account created & signed in!');
-      })
-      .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          setError('That email address is already in use!');
-          setAlertVisible(true);
-          console.log('That email address is already in use!');
-        }
-        if (error.code === 'auth/invalid-email') {
-          setError('That email address is invalid!');
-          setAlertVisible(true);
-          console.log('That email address is invalid!');
-        }
-        console.error(error);
-      });
-  };
+
   //check Validation
   const Validation = () => {
     return isValidEmail(email) && isValidPassword(password) && name.length > 0;
@@ -127,7 +108,9 @@ const SignUp = (props) => {
           <View>
             <View style={{marginVertical: 8}}>
               <ButtonLg
-                onPress={() => createUser(email, password)}
+                onPress={() => {
+                  createUserWithEmail(email, password);
+                }}
                 disabled={!Validation()}
                 title={'Register'}
                 color={colors.Primary}
@@ -140,6 +123,7 @@ const SignUp = (props) => {
                 title={'Cancel'}
                 borderWidth={'1'}
                 borderColor={'white'}
+                onPress={() => {navigate('Login')}}
               />
             </View>
           </View>

@@ -8,26 +8,33 @@ import {ButtonSm} from '../components/index';
 const {width, height} = Dimensions.get('window');
 // create a component
 const AlertView = props => {
-  const closeAlert = (bool) => {
-    props.changeAlert(bool)
-  }
+  const closeAlert = bool => {
+    props.changeAlert(bool);
+  };
   return (
     <View style={styles.container}>
-      <Modal animationType="slide" transparent={true} visible={props.alertVisible}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={props.alertVisible}>
         <View style={styles.container}>
           <View style={styles.modal}>
-            <Text style={[styles.alerTitle, {color: props.color}]}>{props.title}</Text>
+            <Text style={[styles.alerTitle, {color: props.color}]}>
+              {props.title}
+            </Text>
             <LottieView
               style={styles.lottieView}
               source={props.icon}
               autoPlay
               loop
             />
-            <Text style={[styles.alerText, {color: props.color}]}>{props.messenge}</Text>
+            <Text style={[styles.alerText, {color: props.color}]}>
+              {props.messenge}
+            </Text>
             <View style={styles.btn}>
               <ButtonSm
                 onPress={() => {
-                  closeAlert(false)
+                  closeAlert(false);
                 }}
                 haveIcon={false}
                 borderWidth={'0'}

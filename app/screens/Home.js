@@ -1,12 +1,13 @@
 //import liraries
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity, StatusBar} from 'react-native';
 import {colors, img} from '../constants/index';
 
 // create a component
 const Home = () => {
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor={colors.Neural100} barStyle="light-content" />
       <View style={styles.header}>
         <View style={styles.headerContainer}>
           <Image style={styles.logoSmall} source={img.logoSmall} />
@@ -81,6 +82,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: 117,
     alignItems: 'center',
+   
   },
   playListContainer: {
     width: 416,
@@ -98,9 +100,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 28,
+    paddingLeft: 28,
     width: 375,
     height: 88,
+    paddingRight: 10
+    
   },
   logoSetting: {
     width: 24,

@@ -15,6 +15,8 @@ const UITap = props => {
     tabBarActiveBackgroundColor: colors.Neural100,
     tabBarInactiveBackgroundColor: colors.Neural100,
     tabBarInactiveTintColor: colors.Primary20,
+    
+    tabBarStyle:{height: 51, backgroundColor: colors.Neural100},
     tabBarIcon: ({focused, color, size}) => {
       let screenName = route.name;
       let iconName = null;
@@ -36,7 +38,7 @@ const UITap = props => {
     },
   });
   return (
-    <Tab.Navigator styele={{height: 51}} screenOptions={screenOptions}>
+    <Tab.Navigator  screenOptions={screenOptions}>
       <Tab.Screen
         options={{
           tabBarLabel: 'Home',
@@ -89,7 +91,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2c3e50',
   },
   icon: {
-    width: 18.03,
+    width: 19.04,
     height: 20,
   },
 });
