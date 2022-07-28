@@ -92,7 +92,7 @@ const OnBoarding = ({navigation}) => {
             <View style={{height: 50}}>
               <ButtonLg
                 title={'Bắt đầu thôi nào'}
-                onPress={() => navigation.replace('SplashScreen')}
+                onPress={() => navigation.replace('Login')}
                 color={colors.Primary}
                 borderWidth={'0'}
               />

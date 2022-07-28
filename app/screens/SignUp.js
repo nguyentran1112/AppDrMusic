@@ -15,7 +15,7 @@ import {AppContext} from '../contexts/AppContext';
 
 // create a component
 const SignUp = props => {
-  const {error, setAlertVisible, alertVisible, createUserWithEmail} =
+  const {messenge, setAlertVisible, alertVisible, createUserWithEmail} =
     useContext(AppContext);
 
   //Navigation
@@ -131,11 +131,11 @@ const SignUp = props => {
         {alertVisible ? (
           <AlertView
             changeAlert={changeAlert}
-            title={'Error'}
-            messenge={error}
+            title={messenge.title}
+            messenge={messenge.messenge}
             alertVisible={alertVisible}
-            icon={img.error}
-            color={'orange'}
+            icon={messenge.icon}
+            color={messenge.color}
           />
         ) : null}
       </View>

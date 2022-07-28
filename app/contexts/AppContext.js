@@ -3,33 +3,60 @@ import {createContext, useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
-import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
-
+import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
+import {colors, img} from '../constants/index';
 export const AppContext = createContext({});
 
 const AppContextProvider = ({children}) => {
-  const [error, setError] = useState('');
+  const [messenge, setMessenge] = useState({
+    title: '',
+    messenge: '',
+    icon: null,
+  });
+  const [loadingAsync, setLoadingAsync] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
-
+  const [user, setUser] = useState(null);
   /*SIGNIN - SIGNOUT*/
   const signInWithEmail = (email, password) => {
     auth()
       .signInWithEmailAndPassword(email, password)
-      .then(() => {
+      .then(userCredential => {
         console.log('User account signed in!');
+        const dataUser = userCredential.user;
+        const fullName = (dataUser?.displayName ?? '').trim();
+        const email = (dataUser?.email ?? '').trim();
+        const photoURL = (dataUser?.photoURL ?? '').trim();
+        const dataUserTemp = {
+          photoURL: photoURL,
+          fullName: fullName,
+          email: email,
+          userType: 'email&password',
+        };
+        setUser(dataUserTemp);
+        saveUserToStorage(dataUserTemp);
       })
-      .catch(error => {
-        if (error.code === 'auth/wrong-password') {
-          setError('Wrong password!');
+      .catch(messenge => {
+        if (messenge.code === 'auth/wrong-password') {
+          setMessenge({
+            title: 'Error',
+            messenge: 'Wrong password',
+            icon: img.error,
+            color: 'orange',
+          });
           setAlertVisible(true);
           console.log('Wrong password!');
         }
-        if (error.code === 'auth/user-not-found') {
-          setError('User not found!');
+        if (messenge.code === 'auth/user-not-found') {
+          setMessenge({
+            title: 'Error',
+            messenge: 'User not found!',
+            icon: img.error,
+            color: 'organe',
+          });
           setAlertVisible(true);
           console.log('User not found!');
         }
-        console.error(error);
+        console.log(messenge);
       });
   };
 
@@ -39,29 +66,39 @@ const AppContextProvider = ({children}) => {
       .then(() => {
         console.log('User account created & signed in!');
       })
-      .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          setError('That email address is already in use!');
+      .catch(messenge => {
+        if (messenge.code === 'auth/email-already-in-use') {
+          setMessenge({
+            title: 'Error',
+            messenge: 'That email address is already in use!',
+            icon: img.error,
+            color: 'orange',
+          });
           setAlertVisible(true);
           console.log('That email address is already in use!');
         }
-        if (error.code === 'auth/invalid-email') {
-          setError('That email address is invalid!');
+        if (messenge.code === 'auth/invalid-email') {
+          setMessenge({
+            title: 'Error',
+            messenge: 'That email address is invalid!',
+            icon: img.error,
+            color: 'orange',
+          });
           setAlertVisible(true);
           console.log('That email address is invalid!');
         }
-        console.error(error);
       });
   };
 
   const signInWithGoogle = async () => {
+    setLoadingAsync(true);
     await GoogleSignin.configure({
       webClientId:
         '326759469684-logvka8j9itr0vptnk1cvadl6tsu92lr.apps.googleusercontent.com',
       scopes: [],
     });
     const {idToken} = await GoogleSignin.signIn().catch(e => {
-      Alert.alert(e.message);
+      setMessenge(e.messenge);
     });
     // Create a Google credential with the token
     const googleCredential = await auth.GoogleAuthProvider.credential(idToken);
@@ -69,48 +106,87 @@ const AppContextProvider = ({children}) => {
     await auth()
       .signInWithCredential(googleCredential)
       .then(res => {
-        // Alert.alert('UserData', JSON.stringify(res));
-        console.log(res);
+        const dataUser = res.user;
+        const fullName = (dataUser?.displayName ?? '').trim();
+        const email = (dataUser?.email ?? '').trim();
+        const photoURL = (dataUser?.photoURL ?? '').trim();
+        const dataUserTemp = {
+          photoURL: photoURL,
+          fullName: fullName,
+          email: email,
+          userType: 'google',
+        };
+        console.log(dataUserTemp);
+        setLoadingAsync(false);
+        setUser(dataUserTemp);
+        saveUserToStorage(dataUserTemp);
       })
       .catch(e => {
-        // Alert.alert(e.message);
+        setLoadingAsync(false);
+        setMessenge({
+          title: 'Error',
+          messenge: e.messenge,
+          icon: img.error,
+          color: 'orange',
+        });
+        setAlertVisible(true);
       });
     const accessToken = await (await GoogleSignin.getTokens()).accessToken;
   };
 
   const signInWithFB = async () => {
     // Attempt login with permissions
-  const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+    const result = await LoginManager.logInWithPermissions([
+      'public_profile',
+      'email',
+    ]);
 
-  if (result.isCancelled) {
-    throw 'User cancelled the login process';
-  }
+    if (result.isCancelled) {
+      throw 'User cancelled the login process';
+    }
 
-  // Once signed in, get the users AccesToken
-  const data = await AccessToken.getCurrentAccessToken();
+    // Once signed in, get the users AccesToken
+    const data = await AccessToken.getCurrentAccessToken();
 
-  if (!data) {
-    throw 'Something went wrong obtaining access token';
-  }
+    if (!data) {
+      throw 'Something went wrong obtaining access token';
+    }
 
-  // Create a Firebase credential with the AccessToken
-  const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+    // Create a Firebase credential with the AccessToken
+    const facebookCredential = auth.FacebookAuthProvider.credential(
+      data.accessToken,
+    );
 
-  // Sign-in the user with the credential
-  return auth().signInWithCredential(facebookCredential);
-  }
+    // Sign-in the user with the credential
+    return auth().signInWithCredential(facebookCredential);
+  };
   const signOutWithGoogle = async () => {};
 
+  //set & get data to Storage
+  const saveUserToStorage = async user => {
+    await AsyncStorage.setItem('user', JSON.stringify(user));
+  };
+
+  const getDataFromStorage = async () => {
+    let stringUser = await AsyncStorage.getItem('user');
+    return stringUser;
+  };
+  // load data from API
+
   const appContextData = {
-    error,
-    setError,
+    loadingAsync,
+    user,
+    messenge,
+    setUser,
+    setMessenge,
     alertVisible,
     setAlertVisible,
     signInWithGoogle,
     signInWithEmail,
     signOutWithGoogle,
     createUserWithEmail,
-    signInWithFB
+    signInWithFB,
+    getDataFromStorage,
   };
   return (
     <AppContext.Provider value={appContextData}>{children}</AppContext.Provider>

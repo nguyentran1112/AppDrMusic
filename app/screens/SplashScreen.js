@@ -1,20 +1,30 @@
 //import liraries
-import React, {Component, useState, useEffect} from 'react';
+import React, {Component, useState, useEffect, useContext} from 'react';
 import {View, Text, StyleSheet, Image, StatusBar} from 'react-native';
 import {colors, img} from '../constants/index';
+import {AppContext} from '../contexts/AppContext';
 
 // create a component
 const SplashScreen = ({navigation}) => {
+  const {getDataFromStorage} = useContext(AppContext);
   const [timePassed, setTimePassed] = useState(false);
+  useEffect(() => {
+    getDataFromStorage();
+  }, []);
   useEffect(() => {
     setTimeout(() => {
       setTimePassed(true);
-    }, 5000);
+    }, 2000);
   }, []);
+
   useEffect(() => {
-    if (timePassed) {
-      navigation.replace('OnBoarding');
+    if (timePassed && getDataFromStorage() !=null) {
+      navigation.replace('UITap');
     }
+    else if(timePassed) {
+      navigation.replace('OnBoarding')
+    }
+    
   }, [timePassed, navigation]);
 
   return (

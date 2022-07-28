@@ -1,7 +1,7 @@
 //import liraries
 import React, {useContext, Component, useState, useEffect} from 'react';
 import {
-  Alert,
+  Pressable,
   View,
   Text,
   StyleSheet,
@@ -10,8 +10,8 @@ import {
   StatusBar,
   TouchableOpacity,
 } from 'react-native';
+import CheckBox from '@react-native-community/checkbox';
 import {colors, img} from '../constants/index';
-import CheckBox from 'react-native-check-box';
 import {ButtonLg, ButtonSm, AlertView} from '../components';
 import {isValidEmail, isValidPassword} from '../utilities';
 import {AppContext} from '../contexts/AppContext';
@@ -34,10 +34,10 @@ const Login = props => {
   };
 
   const {
+    user,
     signInWithEmail,
     signInWithGoogle,
-    error,
-    setError,
+    messenge,
     setAlertVisible,
     alertVisible,
     signInWithFB,
@@ -46,8 +46,11 @@ const Login = props => {
     setAlertVisible(bool);
   };
 
-  //Handle Login with email and password
-
+  useEffect(() => {
+    if (user !== null) {
+      navigate('UITap');
+    }
+  }, [user]);
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={colors.Neural100} barStyle="light-content" />
@@ -80,8 +83,15 @@ const Login = props => {
           placeholderStyle={styles.placeholderStyle}
           placeholder="Password"
         />
-        <View style={{marginLeft: 12, marginVertical: 8}}>
-          <CheckBox
+        <View
+          style={{
+            marginLeft: 12,
+            marginVertical: 8,
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          {/* <CheckBox
             checkBoxColor={'white'}
             rightTextStyle={styles.whiteTextStyle}
             onClick={() => {
@@ -89,12 +99,21 @@ const Login = props => {
             }}
             isChecked={toggleCheckBox}
             rightText={'Remember me'}
+          /> */}
+          <CheckBox
+            style={{marginRight: 12}}
+            disabled={false}
+            value={toggleCheckBox}
+            onValueChange={newValue => setToggleCheckBox(newValue)}
+            tintColors={{true: 'white', false: 'white'}}
           />
+          <Text style={styles.whiteTextStyle}>Remember me</Text>
         </View>
         <View style={{marginVertical: 8}}>
           <ButtonLg
-            onPress={() => {
-              signInWithEmail(email, password);
+            onPress={async () => {
+              await signInWithEmail(email, password);
+              console.log(user);
             }}
             disabled={!Validation()}
             opacity={!Validation() ? 0.5 : 1}
@@ -150,11 +169,11 @@ const Login = props => {
         {alertVisible ? (
           <AlertView
             changeAlert={changeAlert}
-            title={'Error'}
-            messenge={error}
+            title={messenge.title}
+            messenge={messenge.messenge}
             alertVisible={alertVisible}
-            icon={img.error}
-            color={'orange'}
+            icon={messenge.icon}
+            color={messenge.color}
           />
         ) : null}
       </View>
@@ -239,6 +258,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   register: {display: 'flex', flexDirection: 'row', marginTop: 24},
+  checkbox: {
+    width: 20,
+    height: 20,
+  },
 });
 
 //make this component available to the app

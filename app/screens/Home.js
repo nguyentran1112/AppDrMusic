@@ -1,61 +1,85 @@
 //import liraries
-import React, {Component} from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity, StatusBar} from 'react-native';
+import React, {Component, useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  StatusBar,
+  ScrollView,
+} from 'react-native';
 import {colors, img} from '../constants/index';
-
+import {
+  getHome,
+  getSong,
+  getPlaylists,
+} from 'nhaccuatui-api-full';
 // create a component
 const Home = () => {
+  const [playLists, setPlayList] = useState([]);
+  useEffect(() => {
+    getHome().then(data => setPlayList(data.newRelease.song));
+  }, []);
+  const url = playLists.map(playLists => playLists.thumbnail)
+  console.log(url)
+
   return (
-    <View style={styles.container}>
-      <StatusBar backgroundColor={colors.Neural100} barStyle="light-content" />
-      <View style={styles.header}>
-        <View style={styles.headerContainer}>
-          <Image style={styles.logoSmall} source={img.logoSmall} />
-          <Text style={styles.textHeader}>Dr</Text>
-          <Text style={styles.text}>Music.</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <StatusBar
+          backgroundColor={colors.Neural100}
+          barStyle="light-content"
+        />
+        <View style={styles.header}>
+          <View style={styles.headerContainer}>
+            <Image style={styles.logoSmall} source={img.logoSmall} />
+            <Text style={styles.textHeader}>Dr</Text>
+            <Text style={styles.text}>Music.</Text>
+          </View>
+          <View>
+            <Image style={styles.logoSetting} source={img.iconSetting} />
+          </View>
         </View>
-        <View>
-          <Image style={styles.logoSetting} source={img.iconSetting} />
+        <View style={styles.CategoryContainer}>
+          <View style={styles.CategoryHeader}>
+            <Text style={styles.textCategory}>Categories</Text>
+            <Text style={styles.textSeeMore}>See more</Text>
+          </View>
+          <View style={styles.Category}>
+            <TouchableOpacity style={styles.itemCategory}>
+              <Text style={styles.titleItemCategory}>Art</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.itemCategory}>
+              <Text style={styles.titleItemCategory}>Art</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.itemCategory}>
+              <Text style={styles.titleItemCategory}>Music</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.playListContainer}>
+          <View style={styles.playListHeader}>
+            <Text style={styles.textCategory}>Recommended for you</Text>
+            <Text style={styles.textRecommended}>See more</Text>
+          </View>
+          <View style={styles.playLists}>
+            <Image style={styles.imgPlayList} source={img.imgPlayList} />
+            <Image style={styles.imgPlayList} source={img.imgPlayList} />
+          </View>
+        </View>
+        <View style={styles.playListContainer}>
+          <View style={styles.playListHeader}>
+            <Text style={styles.textCategory}>Best seller</Text>
+            <Text style={styles.textRecommended}>See more</Text>
+          </View>
+          <View style={styles.playLists}>
+            <Image style={styles.imgPlayList} source={img.imgPlayList} />
+            <Image style={styles.imgPlayList} source={img.imgPlayList} />
+          </View>
         </View>
       </View>
-      <View style={styles.CategoryContainer}>
-        <View style={styles.CategoryHeader}>
-          <Text style={styles.textCategory}>Categories</Text>
-          <Text style={styles.textSeeMore}>See more</Text>
-        </View>
-        <View style={styles.Category}>
-          <TouchableOpacity style={styles.itemCategory}>
-            <Text style={styles.titleItemCategory}>Art</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.itemCategory}>
-            <Text style={styles.titleItemCategory}>Art</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.itemCategory}>
-            <Text style={styles.titleItemCategory}>Music</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={styles.playListContainer}>
-        <View style={styles.playListHeader}>
-          <Text style={styles.textCategory}>Recommended for you</Text>
-          <Text style={styles.textRecommended}>See more</Text>
-        </View>
-        <View style={styles.playLists}>
-          <Image style={styles.imgPlayList} source={img.imgPlayList} />
-          <Image style={styles.imgPlayList} source={img.imgPlayList} />
-        </View>
-      </View>
-      <View style={styles.playListContainer}>
-        <View style={styles.playListHeader}>
-          <Text style={styles.textCategory}>Best seller</Text>
-          <Text style={styles.textRecommended}>See more</Text>
-        </View>
-        <View style={styles.playLists}>
-          <Image style={styles.imgPlayList} source={img.imgPlayList} />
-          <Image style={styles.imgPlayList} source={img.imgPlayList} />
-        </View>
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -82,7 +106,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: 117,
     alignItems: 'center',
-   
   },
   playListContainer: {
     width: 416,
@@ -103,8 +126,7 @@ const styles = StyleSheet.create({
     paddingLeft: 28,
     width: 375,
     height: 88,
-    paddingRight: 10
-    
+    paddingRight: 10,
   },
   logoSetting: {
     width: 24,

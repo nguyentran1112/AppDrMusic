@@ -5,6 +5,8 @@ import {Home, Search, Libary} from '../screens/index';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {colors, img} from '../constants/index';
 
+
+
 const Tab = createBottomTabNavigator();
 
 // create a component
