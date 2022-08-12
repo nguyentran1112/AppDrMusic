@@ -1,6 +1,7 @@
 //import liraries
-import React, {Component, useEffect, useState} from 'react';
+import React, {Component, useEffect, useState, useContext} from 'react';
 import {
+  FlatList,
   View,
   Text,
   StyleSheet,
@@ -10,20 +11,29 @@ import {
   ScrollView,
 } from 'react-native';
 import {colors, img} from '../constants/index';
-import {
-  getHome,
-  getSong,
-  getPlaylists,
-} from 'nhaccuatui-api-full';
+import {AppContext} from '../contexts/AppContext';
+import {ImgLoading} from '../components';
 // create a component
-const Home = () => {
-  const [playLists, setPlayList] = useState([]);
+const Home = props => {
+  const {navigation, routes} = props;
+  const {navigate, goBack} = navigation;
+  const [newRelease, setNewRelease] = useState([]);
+  const [recommend,setRecommned] = useState([]);
+  const {getHomeZing, listTop100, getListTop100, home, banner} =
+    useContext(AppContext);
+  useEffect(getListTop100, []);
+  useEffect(getHomeZing, []);
   useEffect(() => {
-    getHome().then(data => setPlayList(data.newRelease.song));
-  }, []);
-  const url = playLists.map(playLists => playLists.thumbnail)
-  console.log(url)
-
+    setNewRelease(home
+    .filter(home => home.title === 'Mới phát hành')
+    .map(home => home.items[0].album));
+  }, [home]);
+  useEffect(() => {
+    setRecommned(home
+    .filter(home => home.title === 'Lựa chọn hôm nay')
+    .map(home => home.items));
+  }, [home]);
+  
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -37,45 +47,108 @@ const Home = () => {
             <Text style={styles.textHeader}>Dr</Text>
             <Text style={styles.text}>Music.</Text>
           </View>
-          <View>
+          <TouchableOpacity onPress={() => navigate('Setting')}>
             <Image style={styles.logoSetting} source={img.iconSetting} />
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.CategoryContainer}>
-          <View style={styles.CategoryHeader}>
-            <Text style={styles.textCategory}>Categories</Text>
-            <Text style={styles.textSeeMore}>See more</Text>
-          </View>
           <View style={styles.Category}>
-            <TouchableOpacity style={styles.itemCategory}>
-              <Text style={styles.titleItemCategory}>Art</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.itemCategory}>
-              <Text style={styles.titleItemCategory}>Art</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.itemCategory}>
-              <Text style={styles.titleItemCategory}>Music</Text>
-            </TouchableOpacity>
+            <FlatList
+              showsHorizontalScrollIndicator={false}
+              horizontal
+              data={banner}
+              renderItem={({item}) => {
+                return (
+                  <Image
+                    style={styles.imgBanner}
+                    source={{uri: item.banner.toString()}}
+                  />
+                );
+              }}
+              keyExtractor={eachBanner => eachBanner.banner.toString()}
+            />
           </View>
         </View>
         <View style={styles.playListContainer}>
           <View style={styles.playListHeader}>
-            <Text style={styles.textCategory}>Recommended for you</Text>
+            <Text style={styles.textCategory}>New Releases</Text>
             <Text style={styles.textRecommended}>See more</Text>
           </View>
           <View style={styles.playLists}>
-            <Image style={styles.imgPlayList} source={img.imgPlayList} />
-            <Image style={styles.imgPlayList} source={img.imgPlayList} />
+            <FlatList
+              showsHorizontalScrollIndicator={false}
+              horizontal
+              data={newRelease[0]}
+              renderItem={({item}) => {
+                return (
+                  <Image
+                    style={styles.imgPlayList}
+                    source={{uri: item.thumbnailM.toString()}}
+                  />
+                );
+              }}
+              keyExtractor={eachPlayList => eachPlayList.encodeId}
+            />
           </View>
         </View>
-        <View style={styles.playListContainer}>
+        <View style={styles.playListContainerText}>
           <View style={styles.playListHeader}>
-            <Text style={styles.textCategory}>Best seller</Text>
+            <Text style={styles.textCategory}>Today's Choice</Text>
             <Text style={styles.textRecommended}>See more</Text>
           </View>
-          <View style={styles.playLists}>
-            <Image style={styles.imgPlayList} source={img.imgPlayList} />
-            <Image style={styles.imgPlayList} source={img.imgPlayList} />
+          <View style={styles.playListsRanking}>
+            <FlatList
+              showsHorizontalScrollIndicator={false}
+              horizontal
+              data={recommend[0]}
+              renderItem={({item}) => {
+                //console.log(item);
+                return (
+                  <View style={{width: 160, marginRight: 16}}>
+                    <Image
+                      style={styles.imgPlayListRanking}
+                      source={{uri: item.thumbnail.toString()}}
+                    />
+                    <Text style={[styles.textTitle, {marginTop: 12}]}>
+                      {item.title}
+                    </Text>
+                  </View>
+                );
+              }}
+              keyExtractor={eachPlayList => eachPlayList.encodeId}
+            />
+          </View>
+        </View>
+        <View style={styles.playListContainerText}>
+          <View style={styles.playListHeader}>
+            <Text style={styles.textCategory}>Top 100</Text>
+            <Text style={styles.textRecommended}>See more</Text>
+          </View>
+          <View style={styles.playListsRanking}>
+            <FlatList
+              showsHorizontalScrollIndicator={false}
+              horizontal
+              data={listTop100}
+              renderItem={({item}) => {
+                //console.log(item);
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigate('Libary', {key: item.encodeId});
+                    }}
+                    style={{width: 160, marginRight: 16}}>
+                    <Image
+                      style={styles.imgPlayListRanking}
+                      source={{uri: item.thumbnailM.toString()}}
+                    />
+                    <Text style={[styles.textTitle, {marginTop: 12}]}>
+                      {item.title}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+              keyExtractor={eachPlayList => eachPlayList.encodeId}
+            />
           </View>
         </View>
       </View>
@@ -108,12 +181,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   playListContainer: {
-    width: 416,
     height: 340,
     marginTop: 32,
     paddingLeft: 28,
   },
-
+  playListContainerText: {
+    width: 416,
+    height: 260,
+    marginTop: 32,
+    paddingLeft: 28,
+  },
   logoSmall: {
     width: 40,
     height: 40,
@@ -153,6 +230,12 @@ const styles = StyleSheet.create({
     color: 'white',
     flexGrow: 1,
   },
+  textTitle: {
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '500',
+    color: colors.textColor,
+  },
   textSeeMore: {
     fontSize: 14,
     lineHeight: 21,
@@ -169,21 +252,10 @@ const styles = StyleSheet.create({
 
   CategoryContainer: {
     width: 382,
-    height: 80,
+    height: 180,
     marginTop: 18,
   },
-  itemCategory: {
-    backgroundColor: colors.Neural80,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 12,
-    marginRight: 12,
-  },
-  titleItemCategory: {
-    fontSize: 16,
-    lineHeight: 21,
-    color: 'white',
-  },
+
   Category: {
     display: 'flex',
     flexDirection: 'row',
@@ -195,7 +267,28 @@ const styles = StyleSheet.create({
     height: 300,
     marginRight: 16,
   },
-  playLists: {display: 'flex', flexDirection: 'row', marginTop: 12},
+  imgBanner: {
+    width: 320,
+    height: 180,
+    marginRight: 16,
+    borderRadius: 12,
+  },
+  imgPlayListRanking: {
+    width: 160,
+    height: 160,
+  },
+  playLists: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginTop: 12,
+    height: 340,
+  },
+  playListsRanking: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginTop: 12,
+    height: 220,
+  },
 });
 
 //make this component available to the app

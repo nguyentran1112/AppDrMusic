@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Setting,
   SplashScreen,
   OnBoarding,
   Login,
@@ -46,6 +47,11 @@ const App = () => {
           options={{headerTitle: 'Test', headerShown: false}}
           name={'UITap'}
           component={UITap}
+        />
+        <Stack.Screen
+          options={{headerTitle: 'Test', headerShown: false}}
+          name={'Setting'}
+          component={Setting}
         />
       </Stack.Navigator>
     </NavigationContainer>

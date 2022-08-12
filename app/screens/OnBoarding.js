@@ -1,5 +1,5 @@
 //import liraries
-import React, {Component, useState, useRef} from 'react';
+import React, { Component, useState, useRef } from 'react';
 import {
   Dimensions,
   View,
@@ -9,12 +9,12 @@ import {
   Image,
   FlatList,
 } from 'react-native';
-import {colors, img} from '../constants/index';
-import {ButtonLg, Button} from '../components/index';
+import { colors, img } from '../constants/index';
+import { ButtonLg, Button } from '../components/index';
 
 // create a component
-const {width, height} = Dimensions.get('window');
-const OnBoarding = ({navigation}) => {
+const { width, height } = Dimensions.get('window');
+const OnBoarding = ({ navigation }) => {
   const slides = [
     {
       id: '1',
@@ -52,7 +52,7 @@ const OnBoarding = ({navigation}) => {
     const nextSlideIndex = currentSlideIndex + 1;
     if (nextSlideIndex != slides.length) {
       const offset = nextSlideIndex * width;
-      ref?.current.scrollToOffset({offset});
+      ref?.current.scrollToOffset({ offset });
       setCurrentSlideIndex(currentSlideIndex + 1);
     }
   };
@@ -60,7 +60,7 @@ const OnBoarding = ({navigation}) => {
   const skip = () => {
     const lastSlideIndex = slides.length - 1;
     const offset = lastSlideIndex * width;
-    ref?.current.scrollToOffset({offset});
+    ref?.current.scrollToOffset({ offset });
     setCurrentSlideIndex(lastSlideIndex);
   };
   const Footer = () => {
@@ -89,8 +89,9 @@ const OnBoarding = ({navigation}) => {
         {/* Render buttons */}
         <View style={styles.btns}>
           {currentSlideIndex == slides.length - 1 ? (
-            <View style={{height: 50}}>
+            <View style={{ height: 50 }}>
               <ButtonLg
+                colorText={colors.textColor}
                 title={'Bắt đầu thôi nào'}
                 onPress={() => navigation.replace('Login')}
                 color={colors.Primary}
@@ -98,9 +99,9 @@ const OnBoarding = ({navigation}) => {
               />
             </View>
           ) : (
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <Button color={colors.Neural100} title={'Skip'} onPress={skip} />
-              <View style={{width: 15}} />
+              <View style={{ width: 15 }} />
               <Button
                 color={colors.Primary}
                 title={'Next'}
@@ -125,7 +126,7 @@ const OnBoarding = ({navigation}) => {
           showsHorizontalScrollIndicator={false}
           horizontal
           data={slides}
-          renderItem={({item}) => {
+          renderItem={({ item }) => {
             return (
               <View style={styles.container}>
                 <Image style={styles.img} source={item.img} />
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.Neural100,
   },
-  container: {alignItems: 'center', height: height, width: width},
+  container: { alignItems: 'center', height: height, width: width },
   img: {
     position: 'absolute',
     width: 260,

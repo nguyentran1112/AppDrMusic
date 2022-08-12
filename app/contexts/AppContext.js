@@ -1,13 +1,19 @@
 import React from 'react';
-import {createContext, useEffect, useState} from 'react';
+import { createContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
-import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
-import {colors, img} from '../constants/index';
+import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
+import { colors, img } from '../constants/index';
+import {
+  getHome,
+  getSong,
+  getPlaylists,
+  //... and many other services
+} from "nhaccuatui-api-full";
 export const AppContext = createContext({});
 
-const AppContextProvider = ({children}) => {
+const AppContextProvider = ({ children }) => {
   const [messenge, setMessenge] = useState({
     title: '',
     messenge: '',
@@ -97,7 +103,7 @@ const AppContextProvider = ({children}) => {
         '326759469684-logvka8j9itr0vptnk1cvadl6tsu92lr.apps.googleusercontent.com',
       scopes: [],
     });
-    const {idToken} = await GoogleSignin.signIn().catch(e => {
+    const { idToken } = await GoogleSignin.signIn().catch(e => {
       setMessenge(e.messenge);
     });
     // Create a Google credential with the token
@@ -160,7 +166,7 @@ const AppContextProvider = ({children}) => {
     // Sign-in the user with the credential
     return auth().signInWithCredential(facebookCredential);
   };
-  const signOutWithGoogle = async () => {};
+  const signOutWithGoogle = async () => { };
 
   //set & get data to Storage
   const saveUserToStorage = async user => {
@@ -171,9 +177,50 @@ const AppContextProvider = ({children}) => {
     let stringUser = await AsyncStorage.getItem('user');
     return stringUser;
   };
-  // load data from API
+
+  // Load data from API zingmp3
+  const [home, setHome] = useState([]);
+  const [banner, setBanner] = useState([]);
+  const [list, setList] = useState([]);
+  const [listTop100, setListTop100] = useState(null);
+
+  //
+  const getHomeZing = () => {
+    fetch(
+      `https://nhatthanh.online/api/gethome`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setHome(data.data.items);
+        setBanner(data.data.items[0].items);
+      });
+  }
+  
+  const getInfoPlaylist = (id) => {
+    fetch(
+      `https://nhatthanh.online/api/getinfoplaylist?idlist=${id}`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setList(data.data.song.items);
+      });
+  }
+  const getListTop100 = () => {
+    fetch('https://nhatthanh.online/api/gettop100')
+      .then(response => response.json())
+      .then(data => {
+        setListTop100(data.data[0].items)
+      })
+  }
+
+
 
   const appContextData = {
+    banner,
+    getListTop100,
+    listTop100,
+    getHomeZing,
+    home,
     loadingAsync,
     user,
     messenge,
@@ -187,6 +234,7 @@ const AppContextProvider = ({children}) => {
     createUserWithEmail,
     signInWithFB,
     getDataFromStorage,
+
   };
   return (
     <AppContext.Provider value={appContextData}>{children}</AppContext.Provider>

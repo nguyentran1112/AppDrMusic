@@ -22,4 +22,5 @@ export default {
   iconSearchedBold: require('../assets/SearchBold.png'),
   iconDocument: require('../assets/Document.png'),
   iconDocumentBold: require('../assets/DocumentBold.png'),
+  iconBack: require('../assets/ArrowLeft.png'),
 };

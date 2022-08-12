@@ -111,6 +111,7 @@ const SignUp = props => {
                 onPress={() => {
                   createUserWithEmail(email, password);
                 }}
+                colorText={colors.textColor}
                 disabled={!Validation()}
                 title={'Register'}
                 color={colors.Primary}

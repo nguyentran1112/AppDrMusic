@@ -9,5 +9,6 @@ export default {
     error: '#ff3333',
     disabled: '#2b237d',
     alertDark: '#121212',
-    Primary20: '#BBB1FA'
+    Primary20: '#BBB1FA',
+    
 }

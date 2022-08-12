@@ -1,4 +1,4 @@
-import {React, useContext} from 'react';
+import React,{useContext} from 'react';
 import {View, StyleSheet} from 'react-native';
 import LottieView from 'lottie-react-native';
 import {AppContext} from '../contexts/AppContext';

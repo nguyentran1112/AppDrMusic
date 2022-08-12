@@ -1,7 +1,6 @@
 //import liraries
 import React, {useContext, Component, useState, useEffect} from 'react';
 import {
-  Pressable,
   View,
   Text,
   StyleSheet,
@@ -91,15 +90,6 @@ const Login = props => {
             flexDirection: 'row',
             alignItems: 'center',
           }}>
-          {/* <CheckBox
-            checkBoxColor={'white'}
-            rightTextStyle={styles.whiteTextStyle}
-            onClick={() => {
-              setToggleCheckBox(toggleCheckBox => !toggleCheckBox);
-            }}
-            isChecked={toggleCheckBox}
-            rightText={'Remember me'}
-          /> */}
           <CheckBox
             style={{marginRight: 12}}
             disabled={false}
@@ -120,6 +110,7 @@ const Login = props => {
             title={'Login'}
             color={colors.Primary}
             borderWidth={'0'}
+            colorText={colors.textColor}
           />
         </View>
         <View style={styles.footerForm}>

@@ -18,7 +18,7 @@ const ButtonLg = props => {
       ]}
       disabled={props.disabled}
       onPress={props.onPress}>
-      <Text style={styles.title}>{props.title}</Text>
+      <Text style={[styles.title, {color: props.colorText}]}>{props.title}</Text>
     </TouchableOpacity>
   );
 };
