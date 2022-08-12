@@ -125,6 +125,8 @@ const SignUp = props => {
                 borderWidth={'1'}
                 borderColor={'white'}
                 onPress={() => {navigate('Login')}}
+                colorText={colors.textColor}
+                
               />
             </View>
           </View>

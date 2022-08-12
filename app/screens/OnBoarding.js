@@ -1,6 +1,7 @@
 //import liraries
 import React, { Component, useState, useRef } from 'react';
 import {
+  StatusBar,
   Dimensions,
   View,
   Text,
@@ -65,6 +66,7 @@ const OnBoarding = ({ navigation }) => {
   };
   const Footer = () => {
     return (
+     
       <View style={styles.styleFooter}>
         {/* Indicator container */}
         <View
@@ -115,6 +117,7 @@ const OnBoarding = ({ navigation }) => {
   };
   return (
     <>
+     <StatusBar backgroundColor={colors.Neural100} barStyle="light-content" />
       <ImageBackground
         style={styles.background}
         source={img.Background}

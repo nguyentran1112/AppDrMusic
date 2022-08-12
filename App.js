@@ -17,7 +17,7 @@ SystemNavigationBar.setNavigationColor('#0F0F29', true);
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="UITap">
+      <Stack.Navigator initialRouteName="SplashScreen">
         <Stack.Screen
           options={{headerTitle: 'Test', headerShown: false}}
           name={'SplashScreen'}

@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import {colors, img} from '../constants/index';
 import {AppContext} from '../contexts/AppContext';
-import {ImgLoading} from '../components';
+import {ImgLoading, Loading} from '../components';
 // create a component
 const Home = props => {
   const {navigation, routes} = props;
@@ -152,6 +152,7 @@ const Home = props => {
           </View>
         </View>
       </View>
+      
     </ScrollView>
   );
 };

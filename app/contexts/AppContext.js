@@ -1,19 +1,13 @@
 import React from 'react';
-import { createContext, useEffect, useState } from 'react';
+import {createContext, useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
-import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
-import { colors, img } from '../constants/index';
-import {
-  getHome,
-  getSong,
-  getPlaylists,
-  //... and many other services
-} from "nhaccuatui-api-full";
+import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
+import {colors, img} from '../constants/index';
 export const AppContext = createContext({});
 
-const AppContextProvider = ({ children }) => {
+const AppContextProvider = ({children}) => {
   const [messenge, setMessenge] = useState({
     title: '',
     messenge: '',
@@ -21,9 +15,21 @@ const AppContextProvider = ({ children }) => {
   });
   const [loadingAsync, setLoadingAsync] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
+  const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState(null);
   /*SIGNIN - SIGNOUT*/
+  //handle user state change
+  const onAuthStateChanged = user => {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  };
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
   const signInWithEmail = (email, password) => {
+    setLoadingAsync(true);
     auth()
       .signInWithEmailAndPassword(email, password)
       .then(userCredential => {
@@ -31,7 +37,10 @@ const AppContextProvider = ({ children }) => {
         const dataUser = userCredential.user;
         const fullName = (dataUser?.displayName ?? '').trim();
         const email = (dataUser?.email ?? '').trim();
-        const photoURL = (dataUser?.photoURL ?? '').trim();
+        const photoURL = (
+          dataUser?.photoURL ??
+          'https://firebasestorage.googleapis.com/v0/b/drmusic-69096.appspot.com/o/avatar.png?alt=media&token=1ec8a4cf-2737-48ac-9f50-826f8b48721a'
+        ).trim();
         const dataUserTemp = {
           photoURL: photoURL,
           fullName: fullName,
@@ -40,6 +49,7 @@ const AppContextProvider = ({ children }) => {
         };
         setUser(dataUserTemp);
         saveUserToStorage(dataUserTemp);
+        setLoadingAsync(false);
       })
       .catch(messenge => {
         if (messenge.code === 'auth/wrong-password') {
@@ -47,20 +57,24 @@ const AppContextProvider = ({ children }) => {
             title: 'Error',
             messenge: 'Wrong password',
             icon: img.error,
-            color: 'orange',
+            color: '#FF8C00',
           });
+         
           setAlertVisible(true);
           console.log('Wrong password!');
+          setLoadingAsync(false);
+          
         }
         if (messenge.code === 'auth/user-not-found') {
           setMessenge({
             title: 'Error',
             messenge: 'User not found!',
             icon: img.error,
-            color: 'organe',
+            color: '#FF8C00',
           });
           setAlertVisible(true);
           console.log('User not found!');
+          setLoadingAsync(false);
         }
         console.log(messenge);
       });
@@ -103,7 +117,7 @@ const AppContextProvider = ({ children }) => {
         '326759469684-logvka8j9itr0vptnk1cvadl6tsu92lr.apps.googleusercontent.com',
       scopes: [],
     });
-    const { idToken } = await GoogleSignin.signIn().catch(e => {
+    const {idToken} = await GoogleSignin.signIn().catch(e => {
       setMessenge(e.messenge);
     });
     // Create a Google credential with the token
@@ -166,8 +180,11 @@ const AppContextProvider = ({ children }) => {
     // Sign-in the user with the credential
     return auth().signInWithCredential(facebookCredential);
   };
-  const signOutWithGoogle = async () => { };
-
+  const signOutWithEmail = () => {
+    auth()
+      .signOut()
+      .then(() => console.log('User signed out!'));
+  };
   //set & get data to Storage
   const saveUserToStorage = async user => {
     await AsyncStorage.setItem('user', JSON.stringify(user));
@@ -175,7 +192,7 @@ const AppContextProvider = ({ children }) => {
 
   const getDataFromStorage = async () => {
     let stringUser = await AsyncStorage.getItem('user');
-    return stringUser;
+    return JSON.parse(stringUser);
   };
 
   // Load data from API zingmp3
@@ -183,39 +200,42 @@ const AppContextProvider = ({ children }) => {
   const [banner, setBanner] = useState([]);
   const [list, setList] = useState([]);
   const [listTop100, setListTop100] = useState(null);
+  const [result, setResult] = useState([]);
 
   //
   const getHomeZing = () => {
-    fetch(
-      `https://nhatthanh.online/api/gethome`
-    )
-      .then((res) => res.json())
-      .then((data) => {
+    fetch(`https://nhatthanh.online/api/gethome`)
+      .then(res => res.json())
+      .then(data => {
         setHome(data.data.items);
         setBanner(data.data.items[0].items);
       });
-  }
-  
-  const getInfoPlaylist = (id) => {
-    fetch(
-      `https://nhatthanh.online/api/getinfoplaylist?idlist=${id}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
+  };
+
+  const getInfoPlaylist = id => {
+    fetch(`https://nhatthanh.online/api/getinfoplaylist?idlist=${id}`)
+      .then(res => res.json())
+      .then(data => {
         setList(data.data.song.items);
       });
-  }
+  };
   const getListTop100 = () => {
     fetch('https://nhatthanh.online/api/gettop100')
       .then(response => response.json())
       .then(data => {
-        setListTop100(data.data[0].items)
-      })
-  }
+        setListTop100(data.data[0].items);
+      });
+  };
 
-
-
+  const searchSong = name => {
+    fetch(`https://nhatthanh.online/api/searchsong?value=${name}`).then(
+      response => response.json())
+      .then(data => setResult(data.data.songs))
+  };
   const appContextData = {
+    result,
+    searchSong,
+    initializing,
     banner,
     getListTop100,
     listTop100,
@@ -230,11 +250,10 @@ const AppContextProvider = ({ children }) => {
     setAlertVisible,
     signInWithGoogle,
     signInWithEmail,
-    signOutWithGoogle,
+    signOutWithEmail,
     createUserWithEmail,
     signInWithFB,
     getDataFromStorage,
-
   };
   return (
     <AppContext.Provider value={appContextData}>{children}</AppContext.Provider>

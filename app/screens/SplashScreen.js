@@ -6,8 +6,9 @@ import {AppContext} from '../contexts/AppContext';
 
 // create a component
 const SplashScreen = ({navigation}) => {
-  const {getDataFromStorage} = useContext(AppContext);
+  const {getDataFromStorage, initializing, user} = useContext(AppContext);
   const [timePassed, setTimePassed] = useState(false);
+  console.log('userLogin', user)
   useEffect(() => {
     getDataFromStorage();
   }, []);
@@ -18,7 +19,7 @@ const SplashScreen = ({navigation}) => {
   }, []);
 
   useEffect(() => {
-    if (timePassed && getDataFromStorage() !=null) {
+    if (timePassed && getDataFromStorage() !=null && user) {
       navigation.replace('UITap');
     }
     else if(timePassed) {

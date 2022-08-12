@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import {colors, img} from '../constants/index';
-import {ButtonLg, ButtonSm, AlertView} from '../components';
+import {ButtonLg, ButtonSm, AlertView, Loading} from '../components';
 import {isValidEmail, isValidPassword} from '../utilities';
 import {AppContext} from '../contexts/AppContext';
 
@@ -31,8 +31,8 @@ const Login = props => {
   const Validation = () => {
     return isValidEmail(email) && isValidPassword(password);
   };
-
   const {
+    loadingAsync,
     user,
     signInWithEmail,
     signInWithGoogle,
@@ -53,7 +53,7 @@ const Login = props => {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={colors.Neural100} barStyle="light-content" />
-
+      {loadingAsync?<Loading />:null}
       <Image style={styles.imgIcon} source={img.logoDark} />
       <View style={styles.formControl}>
         <Text style={styles.title}>Login to Your Account</Text>
@@ -167,6 +167,7 @@ const Login = props => {
             color={messenge.color}
           />
         ) : null}
+        
       </View>
     </View>
   );
