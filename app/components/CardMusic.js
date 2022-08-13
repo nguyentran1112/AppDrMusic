@@ -1,12 +1,12 @@
 //import liraries
 import {colors, img} from '../constants/index';
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 
 // create a component
 const CardMusic = (props) => {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={props.onPress}>
       <View
         style={{
           display: 'flex',
@@ -30,7 +30,7 @@ const CardMusic = (props) => {
           <Text style={styles.titleAuthor}>{props.titleAuthor}</Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

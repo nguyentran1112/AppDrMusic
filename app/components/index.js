@@ -5,5 +5,6 @@ import AlertView from './AlertView';
 import ImgLoading from './ImgLoading';
 import Loading from './Loading';
 import CardMusic from './CardMusic';
+import Player from './Player';
 
-export {AlertView, ButtonLg, Button, ButtonSm, ImgLoading, Loading, CardMusic};
+export {AlertView, ButtonLg, Button, ButtonSm, ImgLoading, Loading, CardMusic, Player};

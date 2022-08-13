@@ -1,7 +1,6 @@
 //import liraries
 import React, {Component, useState, useEffect, useContext} from 'react';
 import {
-  Alert,
   TextInput,
   FlatList,
   View,
@@ -12,68 +11,59 @@ import {
   StatusBar,
 } from 'react-native';
 import {colors, img} from '../constants/index';
-import {CardMusic, Loading, Player} from '../components';
+import {CardMusic, Loading} from '../components';
 import {AppContext} from '../contexts/AppContext';
-const Libary = ({navigation, route}) => {
-  const {list, getInfoPlaylist, loadingAsync, song, setSong, getSong} =
-    useContext(AppContext);
+const ListSong = ({navigation, route}) => {
+  const [listId, setListId] = useState('6BU9U9DC');
   const {navigate, goBack} = navigation;
+  const {list, getInfoPlaylist, loadingAsync} = useContext(AppContext);
   useEffect(() => {
-    getInfoPlaylist('ZWZB969E');
+    setListId(route?.params.key);
   }, []);
-  console.log(song.title)
-  return (
-    <>
-      <View style={styles.container}>
-        <StatusBar
-          backgroundColor={colors.Neural100}
-          barStyle="light-content"
-        />
+  useEffect(() => {
+    getInfoPlaylist(listId);
+  }, [listId]);
 
-        {loadingAsync ? <Loading /> : null}
-        <View style={styles.header}>
-          <View style={styles.headerContainer}>
-            <Image style={styles.logoSmall} source={img.logoSmall} />
-            <Text style={styles.textHeader}>Dr</Text>
-            <Text style={styles.text}>Music.</Text>
-          </View>
-          <TouchableOpacity onPress={() => navigate('Setting')}>
-            <Image style={styles.logoSetting} source={img.iconSetting} />
-          </TouchableOpacity>
+  return (
+    <View style={styles.container}>
+      <StatusBar backgroundColor={colors.Neural100} barStyle="light-content" />
+      {loadingAsync?<Loading/>: null}
+      <View style={styles.header}>
+        <View style={styles.headerContainer}>
+          <Image style={styles.logoSmall} source={img.logoSmall} />
+          <Text style={styles.textHeader}>Dr</Text>
+          <Text style={styles.text}>Music.</Text>
         </View>
-        <View style={[styles.searchContainer, {marginBottom: 16}]}>
-          <Text style={styles.textHeaderSearch}>Songs</Text>
-          <TextInput
-            onChangeText={text => {
-              text;
-            }}
-            style={[styles.textInput, {marginTop: 12}]}
-            placeholderTextColor={colors.Neural60}
-            placeholderStyle={styles.placeholderStyle}
-            placeholder="Search song for name..."
-          />
-        </View>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <FlatList
-            data={list}
-            renderItem={({item}) => (
-              <CardMusic
-                onPress={() => getSong(item.encodeId)}
-                title={item.title}
-                titleAuthor={item.artistsNames}
-                img={item.thumbnailM}
-                keyExtractor={eachSong => eachSong.key}
-              />
-            )}
-          />
-        </View>
+        <TouchableOpacity onPress={() => navigate('Setting')}>
+          <Image style={styles.logoSetting} source={img.iconSetting} />
+        </TouchableOpacity>
       </View>
-      <Player
-        nameSong={song.title}
-        nameSinger={song.artistsNames}
-        image={song.thumbnailM}
-       />
-    </>
+      <View style={[styles.searchContainer, {marginBottom: 16}]}>
+        <Text style={styles.textHeaderSearch}>Songs</Text>
+        <TextInput
+          onChangeText={text => {
+            text;
+          }}
+          style={[styles.textInput, {marginTop: 12}]}
+          placeholderTextColor={colors.Neural60}
+          placeholderStyle={styles.placeholderStyle}
+          placeholder="Search song for name..."
+        />
+      </View>
+      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <FlatList
+          data={list}
+          renderItem={({item}) => (
+            <CardMusic
+              title={item.title}
+              titleAuthor={item.artistsNames}
+              img={item.thumbnailM}
+              keyExtractor={eachSong => eachSong.key}
+            />
+          )}
+        />
+      </View>
+    </View>
   );
 };
 
@@ -165,4 +155,4 @@ const styles = StyleSheet.create({
 });
 
 //make this component available to the app
-export default Libary;
+export default ListSong;

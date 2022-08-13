@@ -24,4 +24,13 @@ export default {
   iconDocumentBold: require('../assets/DocumentBold.png'),
   iconBack: require('../assets/ArrowLeft.png'),
   avatar: require('../assets/avatar.png'),
+  iconStar: require('../assets/icon.json'),
+  cat: require('../assets/cat.json'),
+  crown: require('../assets/crown.json'),
+  play: require('../assets/Play.png'),
+  VolumeUp: require('../assets/VolumeUp.png'),
+  nextBtn: require('../assets/next.png'),
+  previousBtn: require('../assets/previous.png'),
+  cat: require('../assets/catmusic.webp'),
+  
 };

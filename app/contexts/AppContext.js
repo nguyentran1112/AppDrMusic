@@ -5,6 +5,7 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
 import {colors, img} from '../constants/index';
+
 export const AppContext = createContext({});
 
 const AppContextProvider = ({children}) => {
@@ -13,6 +14,7 @@ const AppContextProvider = ({children}) => {
     messenge: '',
     icon: null,
   });
+  
   const [loadingAsync, setLoadingAsync] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [initializing, setInitializing] = useState(true);
@@ -39,7 +41,7 @@ const AppContextProvider = ({children}) => {
         const email = (dataUser?.email ?? '').trim();
         const photoURL = (
           dataUser?.photoURL ??
-          'https://firebasestorage.googleapis.com/v0/b/drmusic-69096.appspot.com/o/avatar.png?alt=media&token=1ec8a4cf-2737-48ac-9f50-826f8b48721a'
+          'https://firebasestorage.googleapis.com/v0/b/drmusic-69096.appspot.com/o/catmusic.webp?alt=media&token=06bfd026-fc89-438c-b5b8-3bfbafd6184c'
         ).trim();
         const dataUserTemp = {
           photoURL: photoURL,
@@ -59,11 +61,10 @@ const AppContextProvider = ({children}) => {
             icon: img.error,
             color: '#FF8C00',
           });
-         
+
           setAlertVisible(true);
           console.log('Wrong password!');
           setLoadingAsync(false);
-          
         }
         if (messenge.code === 'auth/user-not-found') {
           setMessenge({
@@ -185,6 +186,7 @@ const AppContextProvider = ({children}) => {
       .signOut()
       .then(() => console.log('User signed out!'));
   };
+  
   //set & get data to Storage
   const saveUserToStorage = async user => {
     await AsyncStorage.setItem('user', JSON.stringify(user));
@@ -201,22 +203,28 @@ const AppContextProvider = ({children}) => {
   const [list, setList] = useState([]);
   const [listTop100, setListTop100] = useState(null);
   const [result, setResult] = useState([]);
+  const [song, setSong] = useState([]);
+  
 
   //
   const getHomeZing = () => {
+    setLoadingAsync(true);
     fetch(`https://nhatthanh.online/api/gethome`)
       .then(res => res.json())
       .then(data => {
         setHome(data.data.items);
         setBanner(data.data.items[0].items);
+        setLoadingAsync(false);
       });
   };
 
   const getInfoPlaylist = id => {
+    setLoadingAsync(true);
     fetch(`https://nhatthanh.online/api/getinfoplaylist?idlist=${id}`)
       .then(res => res.json())
       .then(data => {
         setList(data.data.song.items);
+        setLoadingAsync(false);
       });
   };
   const getListTop100 = () => {
@@ -228,11 +236,36 @@ const AppContextProvider = ({children}) => {
   };
 
   const searchSong = name => {
-    fetch(`https://nhatthanh.online/api/searchsong?value=${name}`).then(
-      response => response.json())
-      .then(data => setResult(data.data.songs))
+    setLoadingAsync(true);
+    fetch(`https://nhatthanh.online/api/searchsong?value=${name}`)
+      .then(response => response.json())
+      .then(data => {
+        setResult(data.data.songs);
+        setLoadingAsync(false);
+      });
+  };
+
+  const getSong = id => {
+    fetch(`https://nhatthanh.online/api/getsonginfo?id=${id}`)
+      .then(response => response.json())
+      .then(item => {
+        setSong(item.data);
+      });
+  };
+  const linkMp3 = id => {
+    fetch(`https://nhatthanh.online/api/getsong?id=${id}`)
+      .then(response => response.json())
+      .then(data => data.data[128])
+      .catch(function () {
+        alert('Bài hát bị lỗi, chuyển bài kế tiếp nhé');
+      });
   };
   const appContextData = {
+    getSong,
+    song,
+    setSong,
+    list,
+    getInfoPlaylist,
     result,
     searchSong,
     initializing,

@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ListSong,
   Setting,
   SplashScreen,
   OnBoarding,
@@ -52,6 +53,11 @@ const App = () => {
           options={{headerTitle: 'Test', headerShown: false}}
           name={'Setting'}
           component={Setting}
+        />
+        <Stack.Screen
+          options={{headerTitle: 'Test', headerShown: false}}
+          name={'ListSong'}
+          component={ListSong}
         />
       </Stack.Navigator>
     </NavigationContainer>

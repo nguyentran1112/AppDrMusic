@@ -2,11 +2,15 @@
 import React, {Component, useContext, useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {colors, img} from '../constants/index';
-import {ButtonLg} from '../components';
+import {ButtonLg, AlertView} from '../components';
 import {AppContext} from '../contexts/AppContext';
 import {StackActions} from '@react-navigation/native';
 // create a component
 const Setting = props => {
+  const [alertVisible, setAlertVisible] = useState(false);
+  const changeAlert = bool => {
+    setAlertVisible(bool);
+  };
   const {navigation, routes} = props;
   const {navigate, goBack} = navigation;
   const {getDataFromStorage, signOutWithEmail} = useContext(AppContext);
@@ -16,7 +20,7 @@ const Setting = props => {
       .then(data => setUser(data))
       .catch(error => error);
   }, []);
-  console.log(user)
+  console.log(user);
   return (
     <View style={{backgroundColor: colors.Neural100, flex: 1}}>
       <View style={styles.navbar}>
@@ -57,13 +61,17 @@ const Setting = props => {
           <Text style={styles.settingText}>Linked Account</Text>
         </View>
         <View style={styles.separate}></View>
-        <View style={styles.settingChoice}>
+        <TouchableOpacity
+          style={styles.settingChoice}
+          onPress={() => {
+            setAlertVisible(true);
+          }}>
           <Text style={styles.settingText}>About DrMusic</Text>
-        </View>
+        </TouchableOpacity>
       </View>
       <View style={styles.footer}>
         <ButtonLg
-          onPress={()=> {
+          onPress={() => {
             signOutWithEmail();
             navigation.dispatch(StackActions.replace('SplashScreen'));
           }}
@@ -73,6 +81,14 @@ const Setting = props => {
           borderWidth={'1'}
         />
       </View>
+      <AlertView
+        changeAlert={changeAlert}
+        title="About"
+        messenge="DrMusic v1.0 Made by Chi Nguyen "
+        alertVisible={alertVisible}
+        icon={img.crown}
+        color={colors.textColor}
+      />
     </View>
   );
 };

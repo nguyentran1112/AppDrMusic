@@ -11,28 +11,19 @@ import {
   StatusBar,
 } from 'react-native';
 import {colors, img} from '../constants/index';
-import {CardMusic} from '../components';
+import {CardMusic, Loading} from '../components';
 import {AppContext} from '../contexts/AppContext';
 
 const Search = ({navigation, route}) => {
-  const [list, setList] = useState([]);
-  const {getHomeZing, result, searchSong} = useContext(AppContext);
+  const {loadingAsync, result, searchSong} = useContext(AppContext);
   const [search, setSearch] = useState('');
-  const [searchSongs, setSearchSongs]= useState('');
+  const [searchSongs, setSearchSongs] = useState('');
   const {navigate, goBack} = navigation;
-  useEffect(() => {
-    fetch(`https://nhatthanh.online/api/getinfoplaylist?idlist='6BU9U9DC'`)
-      .then(res => res.json())
-      .then(data => {
-        setList(data.data.song.items);
-      });
-  }, []);
   useEffect(() => searchSong(searchSongs), [searchSongs]);
-  console.log('kq', result);
-
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={colors.Neural100} barStyle="light-content" />
+      {loadingAsync ? <Loading /> : null}
       <View style={styles.header}>
         <View style={styles.headerContainer}>
           <Image style={styles.logoSmall} source={img.logoSmall} />
@@ -46,7 +37,10 @@ const Search = ({navigation, route}) => {
       <View style={[styles.searchContainer, {marginBottom: 16}]}>
         <Text style={styles.textHeaderSearch}>Explore</Text>
         <TextInput
-          onBlur={() => setSearchSongs(search)}
+          onBlur={() => {
+            setSearchSongs(search);
+            setSearch('')
+          }}
           value={search}
           onChangeText={text => {
             setSearch(text);

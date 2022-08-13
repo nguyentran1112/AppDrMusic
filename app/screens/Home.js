@@ -18,23 +18,44 @@ const Home = props => {
   const {navigation, routes} = props;
   const {navigate, goBack} = navigation;
   const [newRelease, setNewRelease] = useState([]);
-  const [recommend,setRecommned] = useState([]);
-  const {getHomeZing, listTop100, getListTop100, home, banner} =
+  const [recommend, setRecommned] = useState([]);
+
+  const {getHomeZing, listTop100, getListTop100, home, banner, loadingAsync} =
     useContext(AppContext);
+  const checkDate = () => {
+    const date = new Date();
+    const current_day = date.getDay();
+    return current_day;
+  };
+
   useEffect(getListTop100, []);
   useEffect(getHomeZing, []);
   useEffect(() => {
-    setNewRelease(home
-    .filter(home => home.title === 'Mới phát hành')
-    .map(home => home.items[0].album));
+    setNewRelease(
+      home
+        .filter(home => home.title === 'Mới phát hành')
+        .map(home => home.items[0].album),
+    );
   }, [home]);
   useEffect(() => {
-    setRecommned(home
-    .filter(home => home.title === 'Lựa chọn hôm nay')
-    .map(home => home.items));
+    if (checkDate() >= 6) {
+      setRecommned(
+        home
+          .filter(home => home.title === 'Cuối Tuần Lên Nhạc')
+          .map(home => home.items),
+      );
+    } else {
+      setRecommned(
+        home
+          .filter(home => home.title === 'Lựa chọn hôm nay')
+          .map(home => home.items),
+      );
+    }
   }, [home]);
-  
+
   return (
+    <>
+    {loadingAsync?<Loading />:null}
     <ScrollView>
       <View style={styles.container}>
         <StatusBar
@@ -134,7 +155,7 @@ const Home = props => {
                 return (
                   <TouchableOpacity
                     onPress={() => {
-                      navigate('Libary', {key: item.encodeId});
+                      navigate('ListSong', {key: item.encodeId});
                     }}
                     style={{width: 160, marginRight: 16}}>
                     <Image
@@ -152,8 +173,8 @@ const Home = props => {
           </View>
         </View>
       </View>
-      
     </ScrollView>
+    </>
   );
 };
 
