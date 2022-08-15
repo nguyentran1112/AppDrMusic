@@ -5,6 +5,7 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
 import {colors, img} from '../constants/index';
+import axios from 'axios';
 
 export const AppContext = createContext({});
 
@@ -14,7 +15,7 @@ const AppContextProvider = ({children}) => {
     messenge: '',
     icon: null,
   });
-  
+
   const [loadingAsync, setLoadingAsync] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [initializing, setInitializing] = useState(true);
@@ -186,7 +187,7 @@ const AppContextProvider = ({children}) => {
       .signOut()
       .then(() => console.log('User signed out!'));
   };
-  
+
   //set & get data to Storage
   const saveUserToStorage = async user => {
     await AsyncStorage.setItem('user', JSON.stringify(user));
@@ -197,15 +198,19 @@ const AppContextProvider = ({children}) => {
     return JSON.parse(stringUser);
   };
 
-  // Load data from API zingmp3
+  // Load and set data from API zingmp3
   const [home, setHome] = useState([]);
   const [banner, setBanner] = useState([]);
   const [list, setList] = useState([]);
   const [listTop100, setListTop100] = useState(null);
   const [result, setResult] = useState([]);
   const [song, setSong] = useState([]);
-  
-
+  const [link, setLink] = useState();
+  const [statePlayer, setStatePlayer] = useState({});
+  const [currentIndex, setCurrentIndex] = useState(0);
+  useEffect(() => {
+    getInfoPlaylist('ZWZB969E');
+  }, []);
   //
   const getHomeZing = () => {
     setLoadingAsync(true);
@@ -220,10 +225,10 @@ const AppContextProvider = ({children}) => {
 
   const getInfoPlaylist = id => {
     setLoadingAsync(true);
-    fetch(`https://nhatthanh.online/api/getinfoplaylist?idlist=${id}`)
-      .then(res => res.json())
-      .then(data => {
-        setList(data.data.song.items);
+    axios
+      .get(`https://nhatthanh.online/api/getinfoplaylist?idlist=${id}`)
+      .then(res => {
+        setList(res.data.data.song.items);
         setLoadingAsync(false);
       });
   };
@@ -237,30 +242,45 @@ const AppContextProvider = ({children}) => {
 
   const searchSong = name => {
     setLoadingAsync(true);
-    fetch(`https://nhatthanh.online/api/searchsong?value=${name}`)
-      .then(response => response.json())
-      .then(data => {
-        setResult(data.data.songs);
+    axios
+      .get(`https://nhatthanh.online/api/searchsong?value=${name}`)
+
+      .then(res => {
+        setResult(res.data.data.songs);
         setLoadingAsync(false);
       });
   };
 
   const getSong = id => {
-    fetch(`https://nhatthanh.online/api/getsonginfo?id=${id}`)
-      .then(response => response.json())
-      .then(item => {
-        setSong(item.data);
+    axios.get(`https://nhatthanh.online/api/getsonginfo?id=${id}`).then(res => {
+      setSong(res.data.data);
+    });
+  };
+  const getLink = id => {
+    axios
+      .get(`https://nhatthanh.online/api/getsong?id=${id}`)
+      .then(res => setLink(res.data.data[128]))
+      .catch(function () {
+        alert('Bài hát bị lỗi, chuyển bài kế tiếp nhé');
       });
   };
-  const linkMp3 = id => {
-    fetch(`https://nhatthanh.online/api/getsong?id=${id}`)
-      .then(response => response.json())
-      .then(data => data.data[128])
+  const loadSong = (id=list[currentIndex].encodeId) => {
+    axios.get(`https://nhatthanh.online/api/getsonginfo?id=${id}`).then(res => {
+      setSong(res.data.data);
+    });
+    axios
+      .get(`https://nhatthanh.online/api/getsong?id=${id}`)
+      .then(res => setLink(res.data.data[128]))
       .catch(function () {
         alert('Bài hát bị lỗi, chuyển bài kế tiếp nhé');
       });
   };
   const appContextData = {
+    currentIndex,
+    setCurrentIndex,
+    loadSong,
+    getLink,
+    link,
     getSong,
     song,
     setSong,

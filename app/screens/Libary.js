@@ -1,5 +1,6 @@
 //import liraries
 import React, {Component, useState, useEffect, useContext} from 'react';
+import SoundPlayer from 'react-native-sound-player';
 import {
   Alert,
   TextInput,
@@ -15,13 +16,34 @@ import {colors, img} from '../constants/index';
 import {CardMusic, Loading, Player} from '../components';
 import {AppContext} from '../contexts/AppContext';
 const Libary = ({navigation, route}) => {
-  const {list, getInfoPlaylist, loadingAsync, song, setSong, getSong} =
-    useContext(AppContext);
+  const {
+    list,
+    getInfoPlaylist,
+    loadingAsync,
+    song,
+    link,
+    getSong,
+    getLink,
+    currentIndex,
+    setCurrentIndex,
+    loadSong,
+  } = useContext(AppContext);
   const {navigate, goBack} = navigation;
-  useEffect(() => {
-    getInfoPlaylist('ZWZB969E');
-  }, []);
-  console.log(song.title)
+  const [hidden, setHidden] = useState(true);
+
+  useEffect(loadSong, [currentIndex]);
+  const playMusic = link => {
+    try {
+      // or play from url
+      SoundPlayer.playUrl(link.toString());
+    } catch (e) {
+      console.log(`cannot play the sound file`, e);
+    }
+  };
+  useEffect(()=> {
+    playMusic(link);
+  },[link])
+  console.log(link);
   return (
     <>
       <View style={styles.container}>
@@ -56,9 +78,13 @@ const Libary = ({navigation, route}) => {
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
           <FlatList
             data={list}
-            renderItem={({item}) => (
+            renderItem={({item, index}) => (
               <CardMusic
-                onPress={() => getSong(item.encodeId)}
+                onPress={() => {
+                  setHidden(false);
+                  setCurrentIndex(index);
+                  
+                }}
                 title={item.title}
                 titleAuthor={item.artistsNames}
                 img={item.thumbnailM}
@@ -72,7 +98,7 @@ const Libary = ({navigation, route}) => {
         nameSong={song.title}
         nameSinger={song.artistsNames}
         image={song.thumbnailM}
-       />
+      />
     </>
   );
 };
