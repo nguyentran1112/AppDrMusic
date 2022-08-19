@@ -32,5 +32,6 @@ export default {
   nextBtn: require('../assets/next.png'),
   previousBtn: require('../assets/previous.png'),
   cat: require('../assets/catmusic.webp'),
-  
+  playBtn: require('../assets/play-button.png'),
+  PauseBtn: require('../assets/pause.png'),
 };

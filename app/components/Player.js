@@ -1,6 +1,13 @@
 //import liraries
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Image, Modal} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Modal,
+  TouchableOpacity,
+} from 'react-native';
 import {img, colors} from '../constants/index';
 // create a component
 const Player = props => {
@@ -31,16 +38,18 @@ const Player = props => {
           {props.nameSinger}
         </Text>
       </View>
-      <Image
+      <TouchableOpacity
+        onPress={props.onPress}
         style={{
           position: 'absolute',
           left: '84%',
           right: '5.33%',
           width: 33.33,
           height: 33.33,
-        }}
-        source={img.play}
-      />
+          color: colors.textColor
+        }}>
+        <Image source={props.icon} />
+      </TouchableOpacity>
     </View>
   );
 };

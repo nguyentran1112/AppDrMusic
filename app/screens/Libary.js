@@ -30,19 +30,46 @@ const Libary = ({navigation, route}) => {
   } = useContext(AppContext);
   const {navigate, goBack} = navigation;
   const [hidden, setHidden] = useState(true);
-
+  const [isPlay, setIsPlay] = useState(false);
   useEffect(loadSong, [currentIndex]);
-  const playMusic = link => {
-    try {
-      // or play from url
-      SoundPlayer.playUrl(link.toString());
-    } catch (e) {
-      console.log(`cannot play the sound file`, e);
-    }
+  const Music = {
+    playMusic: function (link) {
+      try {
+        // or play from url
+        SoundPlayer.playUrl(link.toString());
+      } catch (e) {
+        console.log(`cannot play the sound file`, e);
+      }
+    },
+    stopMusic: function () {
+      try {
+        SoundPlayer.stop();
+      } catch (e) {
+        console.log(`cannot stop then`, e);
+      }
+    },
+    pauseMusic: function () {
+      try {
+        SoundPlayer.pause();
+      } catch (e) {
+        console.log(`cannot pause then`, e);
+      }
+    },
+    setVolumeMusic: function (volume) {
+      try {
+        SoundPlayer.setVolume(volume);
+        console.log(`setVolume`, volume);
+      } catch (e) {
+        console.log(`cannot set volume`, e);
+      }
+    },
   };
-  useEffect(()=> {
-    playMusic(link);
-  },[link])
+  useEffect(() => {
+    if (isPlay) {
+      Music.playMusic(link);
+      Music.setVolumeMusic(100);
+    }
+  }, [link, isPlay]);
   console.log(link);
   return (
     <>
@@ -83,7 +110,6 @@ const Libary = ({navigation, route}) => {
                 onPress={() => {
                   setHidden(false);
                   setCurrentIndex(index);
-                  
                 }}
                 title={item.title}
                 titleAuthor={item.artistsNames}
@@ -98,6 +124,16 @@ const Libary = ({navigation, route}) => {
         nameSong={song.title}
         nameSinger={song.artistsNames}
         image={song.thumbnailM}
+        icon={!isPlay?img.playBtn:img.PauseBtn}
+        onPress={() => {
+          if(!isPlay) {
+            setIsPlay(true)
+          }
+          else {
+            setIsPlay(false)
+          }
+          Music.stopMusic();
+        }}
       />
     </>
   );
